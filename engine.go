@@ -62,7 +62,7 @@ func (e *Engine) Load() error {
 		width:  IMG_SIZE,
 		height: IMG_SIZE,
 		texId:  "ghost",
-		flip:   nil,
+		flip:   sdl.FLIP_NONE,
 	})
 
 	return nil

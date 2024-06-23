@@ -18,7 +18,7 @@ type Properties struct {
 	width     int
 	height    int
 	texId     string
-	flip      *sdl.RendererFlip
+	flip      sdl.RendererFlip
 }
 
 func (p *Properties) String() string {

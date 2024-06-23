@@ -19,33 +19,25 @@ func NewCharacter(props *Properties) *Character {
 type Ghost struct {
 	Character
 
-	AnimSpeed  int
-	Row        int
-	Frame      int
-	FrameCount int
+	anim Animation
 }
 
 func NewGhost(props *Properties) *Ghost {
 	return &Ghost{
-		Character:  *NewCharacter(props),
-		Row:        0,
-		Frame:      0,
-		FrameCount: 6,
-		AnimSpeed:  100,
+		Character: *NewCharacter(props),
+		anim:      *NewAnimation(100, 6, sdl.FLIP_NONE, "ghost"),
 	}
 }
 
 func (g Ghost) Draw() {
 	transform := g.GetTransform()
-	TextureManagerInstance.DrawFrame(g.texId, transform.Position.X, transform.Position.Y, g.width, g.height, g.Row, g.Frame, sdl.FLIP_NONE)
+	g.anim.Draw(transform.Position.X, transform.Position.Y, 32, 32)
 }
 
 func (g *Ghost) Update(dt float64) {
-	time := sdl.GetTicks64()
-	// always have a pointer reference
-	g.Frame = int(int(time)/(g.AnimSpeed)) % g.FrameCount
+	g.anim.Update(dt)
 }
 
 func (g Ghost) Destroy() {
-	TextureManagerInstance.Destroy()
+	g.anim.Destroy()
 }
