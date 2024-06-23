@@ -1,6 +1,8 @@
 package main
 
-import "log"
+import (
+	"log"
+)
 
 // EngineInstance is a global variable that holds the instance of the Engine (Singlerton)
 var EngineInstance *Engine = &Engine{}

@@ -6,8 +6,8 @@ import (
 )
 
 type Vector struct {
-	X float64
-	Y float64
+	X int
+	Y int
 }
 
 func (v *Vector) Add(v2 *Vector) {
@@ -20,37 +20,37 @@ func (v *Vector) Sub(v2 *Vector) {
 	v.Y -= v2.Y
 }
 
-func (v *Vector) Mult(scalar float64) {
+func (v *Vector) Mult(scalar int) {
 	v.X *= scalar
 	v.Y *= scalar
 }
 
-func (v *Vector) Div(scalar float64) {
+func (v *Vector) Div(scalar int) {
 	v.X /= scalar
 	v.Y /= scalar
 }
 
 func (v *Vector) Mag() float64 {
-	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+	return math.Sqrt(float64(v.X*v.X + v.Y*v.Y))
 }
 
 func (v *Vector) Normalize() {
 	mag := v.Mag()
 	if mag != 0 {
-		v.Div(mag)
+		v.Div(int(mag))
 	}
 }
 
 func (v *Vector) Limit(max float64) {
 	if v.Mag() > max {
 		v.Normalize()
-		v.Mult(max)
+		v.Mult(int(max))
 	}
 }
 
 func (v *Vector) SetMag(mag float64) {
 	v.Normalize()
-	v.Mult(mag)
+	v.Mult(int(mag))
 }
 
 func (v *Vector) Copy() *Vector {

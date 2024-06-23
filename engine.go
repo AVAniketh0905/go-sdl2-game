@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"go-game/phy"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 )
+
+var PlayerGhost *Ghost
 
 type Engine struct {
 	instance *Engine
@@ -44,10 +47,24 @@ func (e *Engine) Init() error {
 
 func (e *Engine) Load() error {
 	TextureManagerInstance.GetInstance()
-	err := TextureManagerInstance.LoadTexture("ghost", "assets/ghost.png")
+	err := TextureManagerInstance.LoadTexture("ghost", "assets/ghost_anim.png")
 	if err != nil {
 		return fmt.Errorf("failed to load texture: %v", err)
 	}
+
+	PlayerGhost = NewGhost(&Properties{
+		transform: &phy.Transform{
+			Position: phy.Vector{
+				X: 100,
+				Y: 200,
+			},
+		},
+		width:  IMG_SIZE,
+		height: IMG_SIZE,
+		texId:  "ghost",
+		flip:   nil,
+	})
+
 	return nil
 }
 
@@ -68,7 +85,7 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 }
 
 func (e *Engine) Update() {
-	//log.Print("Update")
+	PlayerGhost.Update(0)
 }
 
 func (e *Engine) Events() {
@@ -83,7 +100,7 @@ func (e *Engine) Events() {
 func (e *Engine) Render() {
 	e.renderer.Clear()
 	e.renderer.SetDrawColor(0, 0, 0, 255)
-	TextureManagerInstance.Draw("ghost", 0, 0, 32, 32, sdl.FLIP_NONE)
+	PlayerGhost.Draw()
 	e.renderer.Present()
 }
 

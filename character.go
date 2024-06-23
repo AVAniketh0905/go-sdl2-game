@@ -1,5 +1,9 @@
 package main
 
+import (
+	"github.com/veandco/go-sdl2/sdl"
+)
+
 type Character struct {
 	GameObject
 
@@ -14,22 +18,34 @@ func NewCharacter(props *Properties) *Character {
 
 type Ghost struct {
 	Character
+
+	AnimSpeed  int
+	Row        int
+	Frame      int
+	FrameCount int
 }
 
 func NewGhost(props *Properties) *Ghost {
 	return &Ghost{
-		Character: *NewCharacter(props),
+		Character:  *NewCharacter(props),
+		Row:        0,
+		Frame:      0,
+		FrameCount: 6,
+		AnimSpeed:  100,
 	}
 }
 
 func (g Ghost) Draw() {
-	println("Drawing Ghost")
+	transform := g.GetTransform()
+	TextureManagerInstance.DrawFrame(g.texId, transform.Position.X, transform.Position.Y, g.width, g.height, g.Row, g.Frame, sdl.FLIP_NONE)
 }
 
-func (g Ghost) Update() {
-	println("Updating Ghost")
+func (g *Ghost) Update(dt float64) {
+	time := sdl.GetTicks64()
+	// always have a pointer reference
+	g.Frame = int(int(time)/(g.AnimSpeed)) % g.FrameCount
 }
 
 func (g Ghost) Destroy() {
-	println("Destroying Ghost")
+	TextureManagerInstance.Destroy()
 }
