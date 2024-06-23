@@ -54,9 +54,9 @@ func (e *Engine) Load() error {
 
 	PlayerGhost = NewGhost(&Properties{
 		transform: &phy.Transform{
-			Position: phy.Vector{
-				X: 100,
-				Y: 200,
+			Position: &phy.Vector{
+				X: 10,
+				Y: 20,
 			},
 		},
 		width:  IMG_SIZE,

@@ -36,7 +36,7 @@ func NewGameObject(props *Properties) *GameObject {
 	}
 }
 
-func (g GameObject) GetTransform() *phy.Transform {
+func (g *GameObject) GetTransform() *phy.Transform {
 	return g.transform
 }
 

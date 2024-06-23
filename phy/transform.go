@@ -1,7 +1,7 @@
 package phy
 
 type Transform struct {
-	Position Vector
+	Position *Vector
 }
 
 func (t *Transform) TranslateX(v *Vector) {
