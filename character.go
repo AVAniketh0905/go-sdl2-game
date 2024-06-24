@@ -28,7 +28,7 @@ type Ghost struct {
 func NewGhost(props *Properties) *Ghost {
 	return &Ghost{
 		Character: *NewCharacter(props),
-		anim:      *NewAnimation(100, 3, sdl.FLIP_NONE, "ghost"),
+		anim:      *NewAnimation(120, 3, sdl.FLIP_NONE, "ghost"),
 		rb:        phy.NewRigidBody(props.transform.Position),
 	}
 }
@@ -41,8 +41,8 @@ func (g *Ghost) Draw() {
 
 func (g *Ghost) Update(dt float64) {
 	g.rb.Update(dt)
-	pos := g.rb.GetPosition()
-	g.transform.Translate(pos)
+	disp := g.rb.GetDisplacement()
+	g.transform.Translate(disp)
 	g.anim.Update(dt)
 }
 

@@ -8,6 +8,7 @@ type RigidBody struct {
 	mass float64
 
 	position     *Vector
+	displacement *Vector
 	velocity     *Vector
 	acceleration *Vector
 
@@ -19,6 +20,7 @@ func NewRigidBody(position *Vector) *RigidBody {
 	return &RigidBody{
 		mass:         UNIT_MASS,
 		position:     position,
+		displacement: &Vector{X: 0, Y: 0},
 		velocity:     &Vector{X: 0, Y: 0},
 		acceleration: &Vector{X: 0, Y: 0},
 		friction:     &Vector{X: 0, Y: 0},
@@ -50,11 +52,13 @@ func (rb *RigidBody) ApplyForces() {
 
 func (rb *RigidBody) Update(dt float64) {
 	// log.Println("Updating RigidBody", rb.position, rb.velocity, rb.acceleration)
-	rb.ApplyForces()
+	rb.displacement = rb.position.Copy()
+	//rb.ApplyForces()
 	rb.acceleration.Mult(dt)
 	rb.velocity.Add(rb.acceleration)
 	rb.velocity.Mult(dt)
 	rb.position.Add(rb.velocity)
+	rb.displacement.Sub(rb.position)
 }
 
 // Getters
@@ -64,6 +68,10 @@ func (rb *RigidBody) GetMass() float64 {
 
 func (rb *RigidBody) GetPosition() *Vector {
 	return rb.position
+}
+
+func (rb *RigidBody) GetDisplacement() *Vector {
+	return rb.displacement
 }
 
 func (rb *RigidBody) GetVelocity() *Vector {
