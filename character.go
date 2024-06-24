@@ -2,7 +2,6 @@ package main
 
 import (
 	"go-game/phy"
-	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -35,13 +34,13 @@ func NewGhost(props *Properties) *Ghost {
 }
 
 func (g *Ghost) Draw() {
-	log.Println("Drawing Ghost", g.transform.Position)
+	// log.Println("Drawing Ghost", g.transform.Position)
 	transform := g.GetTransform()
 	g.anim.Draw(int(transform.Position.X), int(transform.Position.Y), IMG_SIZE, IMG_SIZE)
 }
 
 func (g *Ghost) Update(dt float64) {
-	g.rb.Update(0.1)
+	g.rb.Update(dt)
 	pos := g.rb.GetPosition()
 	g.transform.Translate(pos)
 	g.anim.Update(dt)

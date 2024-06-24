@@ -1,7 +1,5 @@
 package phy
 
-import "log"
-
 const UNIT_MASS = 1.0
 const GRAVITY = 0.098
 const FRICTION_COEFF = 0.1
@@ -51,7 +49,7 @@ func (rb *RigidBody) ApplyForces() {
 }
 
 func (rb *RigidBody) Update(dt float64) {
-	log.Println("Updating RigidBody", rb.position, rb.velocity, rb.acceleration)
+	// log.Println("Updating RigidBody", rb.position, rb.velocity, rb.acceleration)
 	rb.ApplyForces()
 	rb.acceleration.Mult(dt)
 	rb.velocity.Add(rb.acceleration)

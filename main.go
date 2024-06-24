@@ -9,6 +9,7 @@ import (
 // EngineInstance is a global variable that holds the instance of the Engine (Singlerton)
 var EngineInstance *Engine = &Engine{}
 var TextureManagerInstance *TextureManager = &TextureManager{}
+var InputInstance *Input = &Input{}
 
 func main() {
 	EngineInstance.GetInstance()

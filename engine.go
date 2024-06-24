@@ -85,16 +85,11 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 }
 
 func (e *Engine) Update() {
-	PlayerGhost.Update(0)
+	PlayerGhost.Update(0.1)
 }
 
 func (e *Engine) Events() {
-	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-		switch event.(type) {
-		case *sdl.QuitEvent:
-			e.IsRunning = false
-		}
-	}
+	InputInstance.GetInstance().Listen()
 }
 
 func (e *Engine) Render() {
