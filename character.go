@@ -28,7 +28,7 @@ type Ghost struct {
 func NewGhost(props *Properties) *Ghost {
 	return &Ghost{
 		Character: *NewCharacter(props),
-		anim:      *NewAnimation(100, 6, sdl.FLIP_NONE, "ghost"),
+		anim:      *NewAnimation(100, 3, sdl.FLIP_NONE, "ghost"),
 		rb:        phy.NewRigidBody(props.transform.Position),
 	}
 }

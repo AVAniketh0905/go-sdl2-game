@@ -47,7 +47,7 @@ func (e *Engine) Init() error {
 
 func (e *Engine) Load() error {
 	TextureManagerInstance.GetInstance()
-	err := TextureManagerInstance.LoadTexture("ghost", "assets/ghost_anim.png")
+	err := TextureManagerInstance.LoadTexture("ghost", "assets/ghost_2.png")
 	if err != nil {
 		return fmt.Errorf("failed to load texture: %v", err)
 	}
