@@ -57,16 +57,11 @@ func (e *Engine) Load() error {
 	}
 
 	PlayerGhost = NewGhost(&Properties{
-		transform: &phy.Transform{
-			Position: &phy.Vector{
-				X: 10,
-				Y: 20,
-			},
-		},
-		width:  IMG_SIZE,
-		height: IMG_SIZE,
-		texId:  "ghost",
-		flip:   sdl.FLIP_NONE,
+		transform: &phy.Transform{X: 10, Y: 20},
+		width:     IMG_SIZE,
+		height:    IMG_SIZE,
+		texId:     "ghost",
+		flip:      sdl.FLIP_NONE,
 	})
 
 	return nil
@@ -97,8 +92,8 @@ func (e *Engine) Events() {
 }
 
 func (e *Engine) Render() {
-	e.renderer.Clear()
 	e.renderer.SetDrawColor(0, 0, 0, 255)
+	e.renderer.Clear()
 	PlayerGhost.Draw()
 	e.renderer.Present()
 }

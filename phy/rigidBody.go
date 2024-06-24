@@ -1,7 +1,9 @@
 package phy
 
+import "log"
+
 const UNIT_MASS = 1.0
-const GRAVITY = 0.098
+const GRAVITY = 0.98
 const FRICTION_COEFF = 0.1
 
 type RigidBody struct {
@@ -16,16 +18,16 @@ type RigidBody struct {
 	friction *Vector
 }
 
-func NewRigidBody(position *Vector) *RigidBody {
+func NewRigidBody(transform *Transform) *RigidBody {
 	return &RigidBody{
 		mass:         UNIT_MASS,
-		position:     position,
+		position:     &Vector{X: transform.X, Y: transform.Y},
 		displacement: &Vector{X: 0, Y: 0},
 		velocity:     &Vector{X: 0, Y: 0},
 		acceleration: &Vector{X: 0, Y: 0},
 		friction:     &Vector{X: 0, Y: 0},
 		forces: []Vector{
-			{X: 0, Y: GRAVITY * UNIT_MASS},
+			{X: 0, Y: -GRAVITY * UNIT_MASS},
 		},
 	}
 }
@@ -47,18 +49,24 @@ func (rb *RigidBody) ApplyForces() {
 		force.Div(rb.mass)
 		rb.acceleration.Add(&force)
 	}
-	rb.ApplyFriction()
+	// rb.ApplyFriction()
 }
 
 func (rb *RigidBody) Update(dt float64) {
-	// log.Println("Updating RigidBody", rb.position, rb.velocity, rb.acceleration)
+	log.Println("Updating RigidBody", rb.position, rb.velocity, rb.acceleration)
 	rb.displacement = rb.position.Copy()
-	//rb.ApplyForces()
-	rb.acceleration.Mult(dt)
-	rb.velocity.Add(rb.acceleration)
-	rb.velocity.Mult(dt)
-	rb.position.Add(rb.velocity)
-	rb.displacement.Sub(rb.position)
+
+	rb.ApplyForces()
+
+	acc_copied := rb.acceleration.Copy()
+	acc_copied.Mult(dt)
+	rb.velocity.Add(acc_copied)
+
+	vel_copied := rb.velocity.Copy()
+	vel_copied.Mult(dt)
+	rb.position.Add(vel_copied)
+
+	rb.displacement.Add(rb.position)
 }
 
 // Getters

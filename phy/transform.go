@@ -1,21 +1,24 @@
 package phy
 
 type Transform struct {
-	Position *Vector
+	X float64
+	Y float64
 }
 
-func (t *Transform) TranslateX(v *Vector) {
-	t.Position.X += v.X
+func (t *Transform) TranslateX(x float64) {
+	t.X += x
 }
 
-func (t *Transform) TranslateY(v *Vector) {
-	t.Position.Y += v.Y
+func (t *Transform) TranslateY(y float64) {
+	t.Y += y
 }
 
 func (t *Transform) Translate(v *Vector) {
-	t.Position.Add(v)
+	t.X += v.X
+	t.Y += v.Y
 }
 
 func (t *Transform) String() string {
-	return t.Position.String()
+	vec := Vector{X: t.X, Y: t.Y}
+	return vec.String()
 }
