@@ -1,6 +1,8 @@
 package main
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 type Input struct {
 	instance  *Input
@@ -9,7 +11,9 @@ type Input struct {
 
 func (i *Input) GetInstance() *Input {
 	if i.instance == nil {
-		i.instance = &Input{}
+		i.instance = &Input{
+			keyStates: sdl.GetKeyboardState(),
+		}
 	}
 	return i.instance
 }

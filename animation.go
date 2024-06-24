@@ -4,24 +4,32 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type Animation struct {
+type PublicAnim struct {
 	animSpeed  int
 	flip       sdl.RendererFlip
-	frame      int
 	frameCount int
-	row        int
 	texId      string
 }
 
-func NewAnimation(animSpeed, frameCount int, flip sdl.RendererFlip, texId string) *Animation {
+type Animation struct {
+	PublicAnim
+	frame int
+	row   int
+}
+
+func NewAnimation(props PublicAnim) *Animation {
 	return &Animation{
-		animSpeed:  animSpeed,
-		flip:       sdl.FLIP_NONE,
+		PublicAnim: props,
 		frame:      0,
-		frameCount: frameCount,
 		row:        0,
-		texId:      texId,
 	}
+}
+
+func (a *Animation) SetProps(props PublicAnim) {
+	a.animSpeed = props.animSpeed
+	a.frameCount = props.frameCount
+	a.flip = props.flip
+	a.texId = props.texId
 }
 
 func (a Animation) Draw(x, y, width, height int) {

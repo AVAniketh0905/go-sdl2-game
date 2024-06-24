@@ -51,3 +51,16 @@ func (g GameObject) Update() {
 func (g GameObject) Destroy() {
 	println("Destroying")
 }
+
+// Character
+type Character struct {
+	GameObject
+
+	Name string
+}
+
+func NewCharacter(props *Properties) *Character {
+	return &Character{
+		GameObject: *NewGameObject(props),
+	}
+}
