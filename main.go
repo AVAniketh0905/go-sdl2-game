@@ -26,7 +26,7 @@ func main() {
 	for EngineInstance.IsRunning {
 		EngineInstance.Events()
 		EngineInstance.Update()
-		EngineInstance.Render()
+		EngineInstance.Draw()
 		TimeInstance.Tick()
 	}
 

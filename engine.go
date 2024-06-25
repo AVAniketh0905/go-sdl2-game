@@ -94,7 +94,7 @@ func (e *Engine) Events() {
 	InputInstance.GetInstance().Listen()
 }
 
-func (e *Engine) Render() {
+func (e *Engine) Draw() {
 	e.renderer.SetDrawColor(0, 0, 0, 255)
 	e.renderer.Clear()
 	PlayerGhost.Draw()
