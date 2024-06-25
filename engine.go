@@ -84,7 +84,7 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 }
 
 func (e *Engine) Update() {
-	PlayerGhost.Update(0.1)
+	PlayerGhost.Update(1)
 }
 
 func (e *Engine) Events() {
