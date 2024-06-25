@@ -2,14 +2,13 @@ package main
 
 import (
 	"log"
-
-	"github.com/veandco/go-sdl2/sdl"
 )
 
 // EngineInstance is a global variable that holds the instance of the Engine (Singlerton)
 var EngineInstance *Engine = &Engine{}
 var TextureManagerInstance *TextureManager = &TextureManager{}
 var InputInstance *Input = &Input{}
+var TimeInstance *Time = &Time{}
 
 func main() {
 	EngineInstance.GetInstance()
@@ -25,13 +24,10 @@ func main() {
 	defer TextureManagerInstance.Destroy()
 
 	for EngineInstance.IsRunning {
-		// TODO: handle FPS
 		EngineInstance.Events()
 		EngineInstance.Update()
 		EngineInstance.Render()
-
-		// Temporary fix for high CPU usage
-		sdl.Delay(10000 / 60)
+		TimeInstance.Tick()
 	}
 
 }

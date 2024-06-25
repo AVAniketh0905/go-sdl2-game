@@ -49,14 +49,12 @@ func (g *Ghost) Draw() {
 
 func (g *Ghost) Controls() {
 	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_A) {
-		g.rb.AddForce(phy.Vector{X: 35, Y: 0})
-		// g.rb.AddVelocity(phy.Vector{X: 35, Y: 0})
+		g.rb.AddForce(phy.Vector{X: 15, Y: 0})
 		g.anim.SetProps(RUNNING_R_PROPS)
 	}
 
 	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_D) {
-		g.rb.AddForce(phy.Vector{X: -35, Y: 0})
-		// g.rb.AddVelocity(phy.Vector{X: -35, Y: 0})
+		g.rb.AddForce(phy.Vector{X: -5, Y: 0})
 		g.anim.SetProps(RUNNING_L_PROPS)
 	}
 }
