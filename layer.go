@@ -23,9 +23,3 @@ func (gm *GameMap) Update() {
 		layer.Update()
 	}
 }
-
-type TileSet struct {
-}
-
-type TileLayer struct {
-}
