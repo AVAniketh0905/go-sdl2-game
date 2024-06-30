@@ -45,13 +45,12 @@ func (tl *TileLayer) GetTileMap() TileSetMap {
 	return tl.tileMap
 }
 
-func (tl *TileLayer) Draw() {
+func (tl TileLayer) Draw() {
+}
+
+func (tl TileLayer) Update() {
 
 }
 
-func (tl *TileLayer) Update() {
-
-}
-
-func (tl *TileLayer) Destroy() {
+func (tl TileLayer) Destroy() {
 }
