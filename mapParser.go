@@ -117,7 +117,6 @@ func (mp *MapParser) parse(id string, src string) error {
 		return fmt.Errorf("failed to parseTileLayers, %v", err)
 	}
 
-	fmt.Println(tileLayers)
 	var gameMap GameMap
 	gameMap.layers = append(gameMap.layers, tileLayers...)
 
