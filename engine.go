@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go-game/phy"
-	"log"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
@@ -86,7 +85,6 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 
 func (e *Engine) Update() {
 	dt := TimeInstance.GetDeltaTime()
-	log.Println(dt)
 	PlayerGhost.Update(dt)
 }
 
