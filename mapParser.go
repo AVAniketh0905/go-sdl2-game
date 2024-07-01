@@ -15,8 +15,9 @@ type MapParser struct {
 
 func (mp *MapParser) GetInstance() *MapParser {
 	if mp.instance == nil {
-		mp.instance = &MapParser{}
-		mp.gameIdMap = make(map[string]*GameMap)
+		mp.instance = &MapParser{
+			gameIdMap: make(map[string]*GameMap),
+		}
 	}
 
 	return mp.instance

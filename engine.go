@@ -47,23 +47,21 @@ func (e *Engine) Init() error {
 }
 
 func (e *Engine) Load() error {
-	TextureManagerInstance.GetInstance()
-	err := TextureManagerInstance.LoadTexture("ghost", "assets/ghost_anim.png")
+	err := TextureManagerInstance.GetInstance().LoadTexture("ghost", "assets/ghost_anim.png")
 	if err != nil {
 		return fmt.Errorf("failed to load texture: %v", err)
 	}
-	err = TextureManagerInstance.LoadTexture("ghost_run", "assets/ghost_2.png")
+	err = TextureManagerInstance.GetInstance().LoadTexture("ghost_run", "assets/ghost_2.png")
 	if err != nil {
 		return fmt.Errorf("failed to load texture: %v", err)
 	}
 
-	MapParserInstance.GetInstance()
-	err = MapParserInstance.Load()
+	err = MapParserInstance.GetInstance().Load()
 	if err != nil {
 		return fmt.Errorf("failed to load map parser, %v", err)
 	}
 
-	e.levelMap = MapParserInstance.GetGameMap("level1")
+	e.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
 
 	PlayerGhost = NewGhost(&Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
@@ -103,7 +101,7 @@ func (e *Engine) Events() {
 }
 
 func (e *Engine) Draw() {
-	e.renderer.SetDrawColor(0, 0, 0, 255)
+	//e.renderer.SetDrawColor(0, 0, 0, 255)
 	e.renderer.Clear()
 	e.levelMap.Draw()
 	PlayerGhost.Draw()

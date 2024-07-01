@@ -80,7 +80,9 @@ func (tl TileLayer) Draw() {
 					tileCol = ts.ColCount - 1
 				}
 
-				TextureManagerInstance.DrawTile(
+				//fmt.Println(ts)
+
+				TextureManagerInstance.GetInstance().DrawTile(
 					ts.Name,
 					ts.TileSize,
 					j*ts.TileSize, // cam.x

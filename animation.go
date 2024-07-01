@@ -33,7 +33,7 @@ func (a *Animation) SetProps(props PublicAnim) {
 }
 
 func (a Animation) Draw(x, y, width, height int) {
-	err := TextureManagerInstance.DrawFrame(a.texId, x, y, width, height, a.row, a.frame, a.flip)
+	err := TextureManagerInstance.GetInstance().DrawFrame(a.texId, x, y, width, height, a.row, a.frame, a.flip)
 	if err != nil {
 		panic(err)
 	}

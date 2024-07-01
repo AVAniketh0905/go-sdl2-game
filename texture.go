@@ -15,9 +15,16 @@ type TextureManager struct {
 
 func (tm *TextureManager) GetInstance() *TextureManager {
 	if tm.instance == nil {
-		tm.instance = &TextureManager{}
+		tm.instance = &TextureManager{
+			textureMap: make(map[string]*sdl.Texture),
+		}
 	}
 	return tm.instance
+}
+
+func (tm *TextureManager) SetTextureMap(id string, texture *sdl.Texture) error {
+	tm.textureMap[id] = texture
+	return nil
 }
 
 func (tm *TextureManager) LoadTexture(id string, path string) error {
@@ -31,10 +38,7 @@ func (tm *TextureManager) LoadTexture(id string, path string) error {
 		return fmt.Errorf("failed to create texture: %v", err)
 	}
 
-	if tm.textureMap == nil {
-		tm.textureMap = make(map[string]*sdl.Texture)
-	}
-	tm.textureMap[id] = texture
+	tm.SetTextureMap(id, texture)
 	return nil
 }
 
@@ -83,7 +87,7 @@ func (tm *TextureManager) DrawTile(tileSetId string, tileSize int, x int, y int,
 		W: int32(tileSize),
 		H: int32(tileSize),
 	}
-
+	fmt.Println("drawing tile texture", tileSetId)
 	err := EngineInstance.GetRenderer().CopyEx(tm.textureMap[tileSetId], &src, &dst, 0, nil, flip)
 	if err != nil {
 		return fmt.Errorf("failed to copy texture: %v", err)
