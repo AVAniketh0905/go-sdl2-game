@@ -47,8 +47,8 @@ func (tm *TextureManager) Draw(id string, x int, y int, width int, height int, f
 
 	src := sdl.Rect{X: 0, Y: 0, W: int32(width), H: int32(height)}
 	dst := sdl.Rect{
-		X: int32(x) - int32(cam.X),
-		Y: int32(y) - int32(cam.Y),
+		X: int32(x) - int32(cam.X*0.5),
+		Y: int32(y) - int32(cam.Y*0.5),
 		W: int32(width),
 		H: int32(height),
 	}
