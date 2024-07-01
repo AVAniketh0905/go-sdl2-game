@@ -63,8 +63,8 @@ func (tm *TextureManager) DrawFrame(id string, x int, y int, width int, height i
 	dst := sdl.Rect{
 		X: int32(x),
 		Y: int32(y),
-		W: 4 * int32(width),
-		H: 4 * int32(height),
+		W: int32(3 * width / 2),
+		H: int32(3 * height / 2),
 	}
 
 	err := EngineInstance.GetRenderer().CopyEx(tm.textureMap[id], &src, &dst, 0, nil, flip)
@@ -87,7 +87,6 @@ func (tm *TextureManager) DrawTile(tileSetId string, tileSize int, x int, y int,
 		W: int32(tileSize),
 		H: int32(tileSize),
 	}
-	fmt.Println("drawing tile texture", tileSetId)
 	err := EngineInstance.GetRenderer().CopyEx(tm.textureMap[tileSetId], &src, &dst, 0, nil, flip)
 	if err != nil {
 		return fmt.Errorf("failed to copy texture: %v", err)

@@ -159,7 +159,7 @@ type XMLTileset struct {
 	TileCount  int      `xml:"tilecount,attr"`
 	NumCols    int      `xml:"columns,attr"`
 	Name       string   `xml:"name,attr"`
-	Image      XMLImage `xml:"tileset>image"`
+	Image      XMLImage `xml:"image"`
 }
 
 type XMLImage struct {

@@ -36,7 +36,7 @@ type TileLayer struct {
 
 func NewTileLayer(tileSize int, rowCount int, colCount int, tileMap TileSetMap, tileSets TileSetList) *TileLayer {
 	for _, ts := range tileSets {
-		TextureManagerInstance.LoadTexture(ts.Name, "assets/maps/"+ts.Src)
+		TextureManagerInstance.GetInstance().LoadTexture(ts.Name, "assets/maps/"+ts.Src)
 	}
 
 	return &TileLayer{
@@ -79,8 +79,6 @@ func (tl TileLayer) Draw() {
 					tileRow--
 					tileCol = ts.ColCount - 1
 				}
-
-				//fmt.Println(ts)
 
 				TextureManagerInstance.GetInstance().DrawTile(
 					ts.Name,
