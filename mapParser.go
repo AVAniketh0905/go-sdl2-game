@@ -5,27 +5,29 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type MapParser struct {
 	instance  *MapParser
-	gameIdMap map[string]GameMap
+	gameIdMap map[string]*GameMap
 }
 
 func (mp *MapParser) GetInstance() *MapParser {
 	if mp.instance == nil {
 		mp.instance = &MapParser{}
+		mp.gameIdMap = make(map[string]*GameMap)
 	}
 
 	return mp.instance
 }
 
-func (mp *MapParser) GetGameMap(id string) GameMap {
+func (mp *MapParser) GetGameMap(id string) *GameMap {
 	return mp.gameIdMap[id]
 }
 
 func (mp *MapParser) Load() error {
-	if err := mp.parse("level1", "assets/maps/map.tmx"); err != nil {
+	if err := mp.parse("level1", "assets/maps/ghost_tilemap.tmx"); err != nil {
 		return fmt.Errorf("failed to load level1, %v", err)
 	}
 
@@ -34,6 +36,7 @@ func (mp *MapParser) Load() error {
 
 func (mp *MapParser) Destroy() {
 	mp.instance = nil
+	mp.gameIdMap = map[string]*GameMap{}
 }
 
 func parseTileSets(xmlMap XMLMap) (tileSets TileSetList) {
@@ -57,29 +60,43 @@ func parseTileSets(xmlMap XMLMap) (tileSets TileSetList) {
 	return tileSets
 }
 
-func getData(stream []byte, width int) (TileSetMap, error) {
+func cleanData(stream []byte) []string {
+	strStream := string(stream)
+	data := strings.ReplaceAll(strStream, "\n", "")
+	data = strings.ReplaceAll(data, "\t", "")
+	streamSlice := strings.Split(data, ",")
+
+	return streamSlice
+}
+
+func getData(stream []string, width int) (TileSetMap, error) {
 	data := TileSetMap{}
-	j, tmpJ := 0, []int{}
-	for _, b := range stream {
-		i, err := strconv.Atoi(string(b))
-		if err != nil {
-			return nil, fmt.Errorf("failed to convert to string, %b, %v", b, err)
-		}
-		if j == width {
+
+	tmpJ := []int{}
+	for i := 0; i <= len(stream); i++ {
+		if i%(width) == 0 && i != 0 {
 			data = append(data, tmpJ)
-			j, tmpJ = 0, []int{}
-		} else {
-			tmpJ = append(tmpJ, i)
+			tmpJ = []int{}
 		}
-		j++
+
+		if i == len(stream) {
+			break
+		}
+
+		iByte, err := strconv.Atoi(stream[i])
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert to string, %v, %v", stream[i], err)
+		}
+		tmpJ = append(tmpJ, iByte)
 	}
 
+	// fmt.Println("here", len(data), len(data[0]))
 	return data, nil
 }
 
 func parseTileLayers(xmlMap XMLMap, tileSets TileSetList, tileSize, RowCount, ColCount int) (layers []Layer, err error) {
 	for _, l := range xmlMap.Layers {
-		stream := l.Data.Content
+		stream := cleanData(l.Data.Content)
 
 		data, err := getData(stream, l.Width)
 		if err != nil {
@@ -120,7 +137,7 @@ func (mp *MapParser) parse(id string, src string) error {
 	var gameMap GameMap
 	gameMap.layers = append(gameMap.layers, tileLayers...)
 
-	mp.gameIdMap[id] = gameMap
+	mp.gameIdMap[id] = &gameMap
 	return nil
 }
 

@@ -14,6 +14,7 @@ type Engine struct {
 	instance *Engine
 	window   *sdl.Window
 	renderer *sdl.Renderer
+	levelMap *GameMap
 
 	IsRunning bool
 }
@@ -56,6 +57,14 @@ func (e *Engine) Load() error {
 		return fmt.Errorf("failed to load texture: %v", err)
 	}
 
+	MapParserInstance.GetInstance()
+	err = MapParserInstance.Load()
+	if err != nil {
+		return fmt.Errorf("failed to load map parser, %v", err)
+	}
+
+	e.levelMap = MapParserInstance.GetGameMap("level1")
+
 	PlayerGhost = NewGhost(&Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
 		width:     IMG_SIZE,
@@ -85,6 +94,7 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 
 func (e *Engine) Update() {
 	dt := TimeInstance.GetDeltaTime()
+	e.levelMap.Update()
 	PlayerGhost.Update(dt)
 }
 
@@ -95,6 +105,7 @@ func (e *Engine) Events() {
 func (e *Engine) Draw() {
 	e.renderer.SetDrawColor(0, 0, 0, 255)
 	e.renderer.Clear()
+	e.levelMap.Draw()
 	PlayerGhost.Draw()
 	e.renderer.Present()
 }

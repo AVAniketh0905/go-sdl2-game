@@ -9,6 +9,7 @@ var EngineInstance *Engine = &Engine{}
 var TextureManagerInstance *TextureManager = &TextureManager{}
 var InputInstance *Input = &Input{}
 var TimeInstance *Time = &Time{}
+var MapParserInstance *MapParser = &MapParser{}
 
 func main() {
 	EngineInstance.GetInstance()
@@ -22,6 +23,7 @@ func main() {
 	}
 	defer EngineInstance.Destroy()
 	defer TextureManagerInstance.Destroy()
+	defer MapParserInstance.Destroy()
 
 	for EngineInstance.IsRunning {
 		EngineInstance.Events()
