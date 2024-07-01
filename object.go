@@ -28,16 +28,25 @@ func (p *Properties) String() string {
 type GameObject struct {
 	Object     // Embedded
 	Properties // From Properties
+	origin     *phy.Point
 }
 
 func NewGameObject(props *Properties) *GameObject {
+	px := props.transform.X + float64(props.width)/2
+	py := props.transform.Y + float64(props.height)/2
+
 	return &GameObject{
 		Properties: *props,
+		origin:     &phy.Point{X: px, Y: py},
 	}
 }
 
 func (g *GameObject) GetTransform() *phy.Transform {
 	return g.transform
+}
+
+func (g *GameObject) GetOrigin() *phy.Point {
+	return g.origin
 }
 
 func (g GameObject) Draw() {

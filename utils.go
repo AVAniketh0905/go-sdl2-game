@@ -7,3 +7,20 @@ const IMG_SIZE = 32
 
 const FPS = 60
 const DELTA_TIME = 1.5 // target delta time (ms)
+
+// mimics an comparable interface but only for int/float
+type comp interface {
+	~int32 | ~int | ~uint | ~float64 | ~float32
+}
+
+func Limit[T comp](nval, ll, ul T) T {
+	if nval < ll {
+		return ll
+	}
+
+	if nval > ul {
+		return ul
+	}
+
+	return nval
+}

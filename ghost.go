@@ -42,6 +42,11 @@ func NewGhost(props *Properties) *Ghost {
 	}
 }
 
+func (g *Ghost) updateOrigin() {
+	g.origin.X = g.transform.X + float64(g.width)/2
+	g.origin.Y = g.transform.Y + float64(g.height)/2
+}
+
 func (g *Ghost) Draw() {
 	transform := g.GetTransform()
 	g.anim.Draw(int(transform.X), int(transform.Y), IMG_SIZE, IMG_SIZE)
@@ -68,6 +73,8 @@ func (g *Ghost) Update(dt float64) {
 
 	disp := g.rb.GetDisplacement()
 	g.transform.Translate(disp)
+
+	g.updateOrigin()
 
 	g.anim.Update(dt)
 }

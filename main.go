@@ -6,6 +6,7 @@ import (
 
 // EngineInstance is a global variable that holds the instance of the Engine (Singlerton)
 var EngineInstance *Engine = &Engine{}
+var CameraInstance *Camera = &Camera{}
 var TextureManagerInstance *TextureManager = &TextureManager{}
 var InputInstance *Input = &Input{}
 var TimeInstance *Time = &Time{}

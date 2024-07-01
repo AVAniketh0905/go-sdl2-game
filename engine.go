@@ -47,7 +47,11 @@ func (e *Engine) Init() error {
 }
 
 func (e *Engine) Load() error {
-	err := TextureManagerInstance.GetInstance().LoadTexture("ghost", "assets/ghost_anim.png")
+	err := TextureManagerInstance.GetInstance().LoadTexture("bg", "assets/bg.png")
+	if err != nil {
+		return fmt.Errorf("failed to load bg texture: %v", err)
+	}
+	err = TextureManagerInstance.GetInstance().LoadTexture("ghost", "assets/ghost_anim.png")
 	if err != nil {
 		return fmt.Errorf("failed to load texture: %v", err)
 	}
@@ -71,6 +75,8 @@ func (e *Engine) Load() error {
 		flip:      sdl.FLIP_NONE,
 	})
 
+	CameraInstance.GetInstance().SetTarget(PlayerGhost.GetOrigin())
+
 	return nil
 }
 
@@ -90,9 +96,11 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 	return e.renderer
 }
 
+// Game Engine
 func (e *Engine) Update() {
 	dt := TimeInstance.GetDeltaTime()
 	e.levelMap.Update()
+	CameraInstance.GetInstance().Update(dt)
 	PlayerGhost.Update(dt)
 }
 
@@ -103,6 +111,7 @@ func (e *Engine) Events() {
 func (e *Engine) Draw() {
 	//e.renderer.SetDrawColor(0, 0, 0, 255)
 	e.renderer.Clear()
+	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, sdl.FLIP_NONE)
 	e.levelMap.Draw()
 	PlayerGhost.Draw()
 	e.renderer.Present()
