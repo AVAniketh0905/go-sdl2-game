@@ -96,6 +96,10 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 	return e.renderer
 }
 
+func (e *Engine) GetLevelMap() *GameMap {
+	return e.levelMap
+}
+
 // Game Engine
 func (e *Engine) Update() {
 	dt := TimeInstance.GetDeltaTime()

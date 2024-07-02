@@ -95,7 +95,6 @@ func (tl TileLayer) Draw() {
 }
 
 func (tl TileLayer) Update() {
-
 }
 
 func (tl TileLayer) Destroy() {
