@@ -1,0 +1,5 @@
+<textures>
+	<texture id="bg" src="assets/bg.png" />
+	<texture id="ghost" src="assets/ghost_anim.png" />
+	<texture id="ghost_run" src="assets/ghost_2.png" />
+</textures>

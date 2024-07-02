@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
+	"os"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
@@ -27,6 +29,21 @@ func (tm *TextureManager) SetTextureMap(id string, texture *sdl.Texture) error {
 	return nil
 }
 
+func (tm *TextureManager) parseTextures(path string) (*XMLTextures, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to real file from %v, %v", path, err)
+	}
+
+	var textures XMLTextures
+	err = xml.Unmarshal(data, &textures)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert to xml %v", err)
+	}
+
+	return &textures, nil
+}
+
 func (tm *TextureManager) LoadTexture(id string, path string) error {
 	surface, err := img.Load(path)
 	if err != nil {
@@ -39,6 +56,22 @@ func (tm *TextureManager) LoadTexture(id string, path string) error {
 	}
 
 	tm.SetTextureMap(id, texture)
+	return nil
+}
+
+func (tm *TextureManager) LoadAllTextures(path string) error {
+	textures, err := tm.parseTextures(path)
+	if err != nil {
+		return fmt.Errorf("failed to get textures, %v", err)
+	}
+
+	for _, tex := range textures.Textures {
+		err = tm.LoadTexture(tex.Id, tex.Src)
+		if err != nil {
+			return fmt.Errorf("failed to load the texture, id: %v, %v", tex.Id, err)
+		}
+	}
+
 	return nil
 }
 
@@ -115,4 +148,13 @@ func (tm *TextureManager) Destroy() {
 	}
 	tm.textureMap = nil
 	tm.instance = nil
+}
+
+type XMLTextures struct {
+	Textures []XMLTexture `xml:"texture"`
+}
+
+type XMLTexture struct {
+	Id  string `xml:"id,attr"`
+	Src string `xml:"src,attr"`
 }

@@ -50,17 +50,21 @@ func EngineInit() (*Engine, error) {
 }
 
 func (e *Engine) Load() error {
-	err := TextureManagerInstance.GetInstance().LoadTexture("bg", "assets/bg.png")
+	// err := TextureManagerInstance.GetInstance().LoadTexture("bg", "assets/bg.png")
+	// if err != nil {
+	// 	return fmt.Errorf("failed to load bg texture: %v", err)
+	// }
+	// err = TextureManagerInstance.GetInstance().LoadTexture("ghost", "assets/ghost_anim.png")
+	// if err != nil {
+	// 	return fmt.Errorf("failed to load texture: %v", err)
+	// }
+	// err = TextureManagerInstance.GetInstance().LoadTexture("ghost_run", "assets/ghost_2.png")
+	// if err != nil {
+	// 	return fmt.Errorf("failed to load texture: %v", err)
+	// }
+	err := TextureManagerInstance.GetInstance().LoadAllTextures("assets/textures.xml")
 	if err != nil {
-		return fmt.Errorf("failed to load bg texture: %v", err)
-	}
-	err = TextureManagerInstance.GetInstance().LoadTexture("ghost", "assets/ghost_anim.png")
-	if err != nil {
-		return fmt.Errorf("failed to load texture: %v", err)
-	}
-	err = TextureManagerInstance.GetInstance().LoadTexture("ghost_run", "assets/ghost_2.png")
-	if err != nil {
-		return fmt.Errorf("failed to load texture: %v", err)
+		return fmt.Errorf("failed to load textures, %v", err)
 	}
 
 	err = MapParserInstance.GetInstance().Load()
