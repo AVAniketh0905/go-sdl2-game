@@ -6,31 +6,10 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-var DEFAULT_PROPS PublicAnim = PublicAnim{
-	animSpeed:  80,
-	frameCount: 6,
-	texId:      "ghost",
-	flip:       sdl.FLIP_NONE,
-}
-
-// var RUNNING_R_PROPS PublicAnim = PublicAnim{
-// 	animSpeed:  80,
-// 	frameCount: 3,
-// 	texId:      "ghost_run",
-// 	flip:       sdl.FLIP_HORIZONTAL,
-// }
-
-var RUNNING_PROPS PublicAnim = PublicAnim{
-	animSpeed:  80,
-	frameCount: 3,
-	texId:      "ghost_run",
-	flip:       sdl.FLIP_NONE,
-}
-
 type Ghost struct {
 	Character
 
-	anim *Animation
+	anim *SpriteAnimation
 	rb   *phy.RigidBody
 
 	isJumping   bool
@@ -55,7 +34,7 @@ func NewGhost(props *Properties) *Ghost {
 	collider.SetBuffer(-5, 13, 0, 0)
 	return &Ghost{
 		Character:        *NewCharacter(props),
-		anim:             NewAnimation(DEFAULT_PROPS),
+		anim:             NewSpriteAnimation(props.texId, 6, 80, sdl.FLIP_NONE),
 		rb:               phy.NewRigidBody(props.transform),
 		collider:         collider,
 		jumpTime:         JUMP_TIME,
@@ -71,36 +50,36 @@ func (g *Ghost) updateOrigin() {
 }
 
 func (g *Ghost) animationState() {
-	g.anim.SetProps(DEFAULT_PROPS)
+	g.anim.SetProps("ghost", 0, 6, 80) // DEFAULT PROPS
 
 	if g.isRunning {
-		g.anim.SetProps(RUNNING_PROPS)
+		g.anim.SetProps("ghost_run", 0, 3, 80) // RUNNING PROPS
 	}
 
 	if g.isJumping {
 		// g.anim.SetProps(JUMPING_PROPS)
-		g.anim.SetProps(DEFAULT_PROPS)
+		g.anim.SetProps("ghost", 0, 6, 80)
 	}
 
 	if g.isFalling {
 		// g.anim.SetProps(FALLING_PROPS)
-		g.anim.SetProps(DEFAULT_PROPS)
+		g.anim.SetProps("ghost", 0, 6, 80)
 	}
 
 	if g.isAttacking {
 		// g.anim.SetProps(ATTACK_PROPS)
-		g.anim.SetProps(DEFAULT_PROPS)
+		g.anim.SetProps("ghost", 0, 6, 80)
 	}
 
 	if g.isCrouching {
 		// g.anim.SetProps(CROUCH_PROPS)
-		g.anim.SetProps(DEFAULT_PROPS)
+		g.anim.SetProps("ghost", 0, 6, 80)
 	}
 }
 
 func (g *Ghost) Draw() {
 	transform := g.GetTransform()
-	g.anim.Draw(int(transform.X), int(transform.Y), IMG_SIZE, IMG_SIZE)
+	g.anim.Draw(int(transform.X), int(transform.Y), IMG_SIZE, IMG_SIZE, 1, 1)
 
 	cam := CameraInstance.GetInstance().GetPosition()
 	box := g.collider.Get()
@@ -119,13 +98,13 @@ func (g *Ghost) Controls(dt float64) {
 func (g *Ghost) RunningControls(dt float64) {
 	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == -1 && !g.isAttacking {
 		g.rb.AddForce(phy.Vector{X: RUN_FORCE, Y: 0})
-		RUNNING_PROPS.SetFlip(sdl.FLIP_HORIZONTAL)
+		g.anim.SetFlip(sdl.FLIP_HORIZONTAL)
 		g.isRunning = true
 	}
 
 	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == 1 && !g.isAttacking {
 		g.rb.AddForce(phy.Vector{X: -RUN_FORCE, Y: 0})
-		RUNNING_PROPS.SetFlip(sdl.FLIP_NONE)
+		g.anim.SetFlip(sdl.FLIP_NONE)
 		g.isRunning = true
 	}
 }
