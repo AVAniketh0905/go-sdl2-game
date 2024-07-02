@@ -124,9 +124,9 @@ func (e *Engine) Events() {
 }
 
 func (e *Engine) Draw() {
-	//e.renderer.SetDrawColor(0, 0, 0, 255)
+	e.renderer.SetDrawColor(0, 0, 0, 255)
 	e.renderer.Clear()
-	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, sdl.FLIP_NONE)
+	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 0.5, sdl.FLIP_NONE)
 	e.levelMap.Draw()
 	PlayerGhost.Draw()
 	e.renderer.Present()

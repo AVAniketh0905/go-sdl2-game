@@ -75,18 +75,17 @@ func (tm *TextureManager) LoadAllTextures(path string) error {
 	return nil
 }
 
-func (tm *TextureManager) Draw(id string, x int, y int, width int, height int, flip sdl.RendererFlip) error {
+func (tm *TextureManager) Draw(id string, x, y, width, height int, scrollRatio float64, flip sdl.RendererFlip) error {
 	cam := CameraInstance.GetInstance().GetPosition()
-
 	src := sdl.Rect{X: 0, Y: 0, W: int32(width), H: int32(height)}
 	dst := sdl.Rect{
-		X: int32(x) - int32(cam.X*0.5),
-		Y: int32(y) - int32(cam.Y*0.5),
+		X: int32(x) - int32(cam.X*scrollRatio),
+		Y: int32(y) - int32(cam.Y*scrollRatio),
 		W: int32(width),
 		H: int32(height),
 	}
 
-	err := EngineInstance.GetRenderer().CopyEx(tm.textureMap[id], &src, &dst, 0, nil, flip)
+	err := EngineInstance.GetInstance().GetRenderer().CopyEx(tm.textureMap[id], &src, &dst, 0, nil, flip)
 	if err != nil {
 		return fmt.Errorf("failed to copy texture: %v", err)
 	}
