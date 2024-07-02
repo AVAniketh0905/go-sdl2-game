@@ -10,20 +10,20 @@ import (
 
 type MapParser struct {
 	instance  *MapParser
-	gameIdMap map[string]*GameMap
+	gameIdMap map[string]*GameMap[TileLayer]
 }
 
 func (mp *MapParser) GetInstance() *MapParser {
 	if mp.instance == nil {
 		mp.instance = &MapParser{
-			gameIdMap: make(map[string]*GameMap),
+			gameIdMap: make(map[string]*GameMap[TileLayer]),
 		}
 	}
 
 	return mp.instance
 }
 
-func (mp *MapParser) GetGameMap(id string) *GameMap {
+func (mp *MapParser) GetGameMap(id string) *GameMap[TileLayer] {
 	return mp.gameIdMap[id]
 }
 
@@ -37,7 +37,7 @@ func (mp *MapParser) Load() error {
 
 func (mp *MapParser) Destroy() {
 	mp.instance = nil
-	mp.gameIdMap = map[string]*GameMap{}
+	mp.gameIdMap = map[string]*GameMap[TileLayer]{}
 }
 
 func parseTileSets(xmlMap XMLMap) (tileSets TileSetList) {
@@ -90,12 +90,10 @@ func getData(stream []string, width int) (TileSetMap, error) {
 		}
 		tmpJ = append(tmpJ, iByte)
 	}
-
-	// fmt.Println("here", len(data), len(data[0]))
 	return data, nil
 }
 
-func parseTileLayers(xmlMap XMLMap, tileSets TileSetList, tileSize, RowCount, ColCount int) (layers []Layer, err error) {
+func parseTileLayers(xmlMap XMLMap, tileSets TileSetList, tileSize, RowCount, ColCount int) (layers []TileLayer, err error) {
 	for _, l := range xmlMap.Layers {
 		stream := cleanData(l.Data.Content)
 
@@ -135,7 +133,7 @@ func (mp *MapParser) parse(id string, src string) error {
 		return fmt.Errorf("failed to parseTileLayers, %v", err)
 	}
 
-	var gameMap GameMap
+	var gameMap GameMap[TileLayer]
 	gameMap.layers = append(gameMap.layers, tileLayers...)
 
 	mp.gameIdMap[id] = &gameMap

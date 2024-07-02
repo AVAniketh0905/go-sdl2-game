@@ -5,6 +5,11 @@ type Transform struct {
 	Y float64
 }
 
+func (t *Transform) Set(v Vector) {
+	t.X = v.X
+	t.Y = v.Y
+}
+
 func (t *Transform) TranslateX(x float64) {
 	t.X += x
 }

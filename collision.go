@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -10,18 +8,19 @@ type CollisionHandler struct {
 	instance *CollisionHandler
 
 	collisionTileSetMap TileSetMap
-	// collisionLayer      *TileLayer
+	collisionLayer      TileLayer
 }
 
 func (ch *CollisionHandler) GetInstance() *CollisionHandler {
 	lvlLayers := EngineInstance.GetInstance().GetLevelMap().GetLayers()
-	fmt.Println(lvlLayers)
-	// TODO: TileLayer -> Layer but Layer -x-> TileLayer
-	// ch.collisionLayer = lvlLayers[0]
-	// ch.collisionTileSetMap = ch.collisionLayer.tileMap
+	// TODO: TileLayer manually imputed as an genric
+	layer := lvlLayers[0]
 
 	if ch.instance == nil {
-		return &CollisionHandler{}
+		ch.instance = &CollisionHandler{
+			collisionLayer:      layer,
+			collisionTileSetMap: layer.GetTileMap(),
+		}
 	}
 
 	return ch.instance
@@ -43,7 +42,7 @@ func (ch *CollisionHandler) MapCollision(a *sdl.Rect) bool {
 
 	for i := l; i < r; i++ {
 		for j := t; j < b; j++ {
-			if ch.collisionTileSetMap[j][i] > 0 {
+			if ch.collisionTileSetMap[j][i] != 0 {
 				return true
 			}
 		}

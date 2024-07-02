@@ -53,6 +53,11 @@ func (v *Vector) SetMag(mag float64) {
 	v.Mult(mag)
 }
 
+func (v *Vector) Set(vec Vector) {
+	v.X = vec.X
+	v.Y = vec.Y
+}
+
 func (v *Vector) Copy() *Vector {
 	return &Vector{X: v.X, Y: v.Y}
 }

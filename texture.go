@@ -33,7 +33,7 @@ func (tm *TextureManager) LoadTexture(id string, path string) error {
 		return fmt.Errorf("failed to load image: %v", err)
 	}
 
-	texture, err := EngineInstance.GetRenderer().CreateTextureFromSurface(surface)
+	texture, err := EngineInstance.GetInstance().GetRenderer().CreateTextureFromSurface(surface)
 	if err != nil {
 		return fmt.Errorf("failed to create texture: %v", err)
 	}
@@ -76,7 +76,7 @@ func (tm *TextureManager) DrawFrame(id string, x int, y int, width int, height i
 		H: int32(3 * height / 2),
 	}
 
-	err := EngineInstance.GetRenderer().CopyEx(tm.textureMap[id], &src, &dst, 0, nil, flip)
+	err := EngineInstance.GetInstance().GetRenderer().CopyEx(tm.textureMap[id], &src, &dst, 0, nil, flip)
 	if err != nil {
 		return fmt.Errorf("failed to copy texture: %v", err)
 	}
@@ -99,7 +99,7 @@ func (tm *TextureManager) DrawTile(tileSetId string, tileSize int, x int, y int,
 		H: int32(tileSize),
 	}
 
-	err := EngineInstance.GetRenderer().CopyEx(tm.textureMap[tileSetId], &src, &dst, 0, nil, flip)
+	err := EngineInstance.GetInstance().GetRenderer().CopyEx(tm.textureMap[tileSetId], &src, &dst, 0, nil, flip)
 	if err != nil {
 		return fmt.Errorf("failed to copy texture: %v", err)
 	}
@@ -107,7 +107,6 @@ func (tm *TextureManager) DrawTile(tileSetId string, tileSize int, x int, y int,
 }
 
 func (tm *TextureManager) DropTexture(id string) {
-
 }
 
 func (tm *TextureManager) Destroy() {

@@ -6,6 +6,9 @@ const HEIGHT = 600
 const IMG_SIZE = 32
 const TILE_SIZE = 32
 
+const JUMP_TIME = 15
+const JUMP_FORCE = 10
+
 const FPS = 60
 const DELTA_TIME = 1.5 // target delta time (ms)
 

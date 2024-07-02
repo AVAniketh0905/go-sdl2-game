@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go-game/phy"
+	"log"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
@@ -14,36 +15,38 @@ type Engine struct {
 	instance *Engine
 	window   *sdl.Window
 	renderer *sdl.Renderer
-	levelMap *GameMap
+	levelMap *GameMap[TileLayer]
 
 	IsRunning bool
 }
 
-func (e *Engine) Init() error {
+func EngineInit() (*Engine, error) {
+	var e Engine
+
 	err := sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
-		return fmt.Errorf("failed to initialize SDL: %v", err)
+		return nil, fmt.Errorf("failed to initialize SDL: %v", err)
 	}
 
 	err = img.Init(img.INIT_PNG)
 	if err != nil {
-		return fmt.Errorf("failed to initialize SDL: %v", err)
+		return nil, fmt.Errorf("failed to initialize SDL: %v", err)
 	}
 
 	window, err := sdl.CreateWindow("Game", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, sdl.WINDOW_SHOWN)
 	if err != nil {
-		return fmt.Errorf("failed to create window: %v", err)
+		return nil, fmt.Errorf("failed to create window: %v", err)
 	}
 
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED|sdl.RENDERER_PRESENTVSYNC)
 	if err != nil {
-		return fmt.Errorf("failed to create renderer: %v", err)
+		return nil, fmt.Errorf("failed to create renderer: %v", err)
 	}
 
 	e.window = window
 	e.renderer = renderer
 	e.IsRunning = true
-	return nil
+	return &e, nil
 }
 
 func (e *Engine) Load() error {
@@ -83,7 +86,11 @@ func (e *Engine) Load() error {
 // Getter Methods
 func (e *Engine) GetInstance() *Engine {
 	if e.instance == nil {
-		e.instance = &Engine{}
+		engine, err := EngineInit()
+		if err != nil {
+			log.Fatal("failed to load the engine")
+		}
+		e.instance = engine
 	}
 	return e.instance
 }
@@ -96,13 +103,13 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 	return e.renderer
 }
 
-func (e *Engine) GetLevelMap() *GameMap {
+func (e *Engine) GetLevelMap() *GameMap[TileLayer] {
 	return e.levelMap
 }
 
 // Game Engine
 func (e *Engine) Update() {
-	dt := TimeInstance.GetDeltaTime()
+	dt := TimeInstance.GetInstance().GetDeltaTime()
 	e.levelMap.Update()
 	CameraInstance.GetInstance().Update(dt)
 	PlayerGhost.Update(dt)

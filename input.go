@@ -22,7 +22,7 @@ func (i *Input) Listen() {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch t := event.(type) {
 		case *sdl.QuitEvent:
-			EngineInstance.IsRunning = false
+			EngineInstance.GetInstance().IsRunning = false
 		case *sdl.KeyboardEvent:
 			if t.Type == sdl.KEYDOWN {
 				i.KeyDown()

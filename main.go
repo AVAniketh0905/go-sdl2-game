@@ -11,26 +11,21 @@ var TextureManagerInstance *TextureManager = &TextureManager{}
 var InputInstance *Input = &Input{}
 var TimeInstance *Time = &Time{}
 var MapParserInstance *MapParser = &MapParser{}
+var CollisionHandlerInstance *CollisionHandler = &CollisionHandler{}
 
 func main() {
-	EngineInstance.GetInstance()
-	err := EngineInstance.Init()
-	if err != nil {
-		log.Fatalf("Failed to initialize EngineInstance: %v", err)
-	}
-	err = EngineInstance.Load()
+	err := EngineInstance.GetInstance().Load()
 	if err != nil {
 		log.Fatalf("Failed to load EngineInstance: %v", err)
 	}
-	defer EngineInstance.Destroy()
-	defer TextureManagerInstance.Destroy()
-	defer MapParserInstance.Destroy()
+	defer EngineInstance.GetInstance().Destroy()
+	defer TextureManagerInstance.GetInstance().Destroy()
+	defer MapParserInstance.GetInstance().Destroy()
 
-	for EngineInstance.IsRunning {
-		EngineInstance.Events()
-		EngineInstance.Update()
-		EngineInstance.Draw()
-		TimeInstance.Tick()
+	for EngineInstance.GetInstance().IsRunning {
+		EngineInstance.GetInstance().Events()
+		EngineInstance.GetInstance().Update()
+		EngineInstance.GetInstance().Draw()
+		TimeInstance.GetInstance().Tick()
 	}
-
 }

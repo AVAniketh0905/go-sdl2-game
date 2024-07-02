@@ -4,21 +4,21 @@ type Layer interface {
 	Object
 }
 
-type GameMap struct {
-	layers []Layer
+type GameMap[l Layer] struct {
+	layers []l
 }
 
-func (gm *GameMap) GetLayers() []Layer {
+func (gm *GameMap[l]) GetLayers() []l {
 	return gm.layers
 }
 
-func (gm *GameMap) Draw() {
+func (gm *GameMap[l]) Draw() {
 	for _, layer := range gm.layers {
 		layer.Draw()
 	}
 }
 
-func (gm *GameMap) Update() {
+func (gm *GameMap[l]) Update() {
 	for _, layer := range gm.layers {
 		layer.Update()
 	}
