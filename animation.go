@@ -11,6 +11,10 @@ type PublicAnim struct {
 	texId      string
 }
 
+func (pa *PublicAnim) SetFlip(flip sdl.RendererFlip) {
+	pa.flip = flip
+}
+
 type Animation struct {
 	PublicAnim
 	frame int

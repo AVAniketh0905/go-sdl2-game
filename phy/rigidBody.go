@@ -1,7 +1,7 @@
 package phy
 
 const UNIT_MASS = 1.0
-const GRAVITY = 0.98
+const GRAVITY = 9.8
 const FRICTION_COEFF = 0.1
 
 type RigidBody struct {

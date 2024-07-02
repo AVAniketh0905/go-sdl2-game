@@ -13,14 +13,14 @@ var DEFAULT_PROPS PublicAnim = PublicAnim{
 	flip:       sdl.FLIP_NONE,
 }
 
-var RUNNING_R_PROPS PublicAnim = PublicAnim{
-	animSpeed:  80,
-	frameCount: 3,
-	texId:      "ghost_run",
-	flip:       sdl.FLIP_HORIZONTAL,
-}
+// var RUNNING_R_PROPS PublicAnim = PublicAnim{
+// 	animSpeed:  80,
+// 	frameCount: 3,
+// 	texId:      "ghost_run",
+// 	flip:       sdl.FLIP_HORIZONTAL,
+// }
 
-var RUNNING_L_PROPS PublicAnim = PublicAnim{
+var RUNNING_PROPS PublicAnim = PublicAnim{
 	animSpeed:  80,
 	frameCount: 3,
 	texId:      "ghost_run",
@@ -33,10 +33,16 @@ type Ghost struct {
 	anim *Animation
 	rb   *phy.RigidBody
 
-	isJumping  bool
-	isGrounded bool
+	isJumping   bool
+	isFalling   bool
+	isGrounded  bool
+	isRunning   bool
+	isAttacking bool
+	isCrouching bool
 
-	jumpTime  float64
+	jumpTime   float64
+	attackTime float64
+
 	jumpForce float64
 
 	collider *phy.Collider
@@ -46,7 +52,7 @@ type Ghost struct {
 
 func NewGhost(props *Properties) *Ghost {
 	collider := &phy.Collider{}
-	collider.SetBuffer(0, 0, 0, 0)
+	collider.SetBuffer(-5, 13, 0, 0)
 	return &Ghost{
 		Character:        *NewCharacter(props),
 		anim:             NewAnimation(DEFAULT_PROPS),
@@ -54,6 +60,7 @@ func NewGhost(props *Properties) *Ghost {
 		collider:         collider,
 		jumpTime:         JUMP_TIME,
 		jumpForce:        JUMP_FORCE,
+		attackTime:       ATTACK_TIME,
 		LastSafePosition: &phy.Vector{},
 	}
 }
@@ -61,6 +68,34 @@ func NewGhost(props *Properties) *Ghost {
 func (g *Ghost) updateOrigin() {
 	g.origin.X = g.transform.X + float64(g.width)/2
 	g.origin.Y = g.transform.Y + float64(g.height)/2
+}
+
+func (g *Ghost) animationState() {
+	g.anim.SetProps(DEFAULT_PROPS)
+
+	if g.isRunning {
+		g.anim.SetProps(RUNNING_PROPS)
+	}
+
+	if g.isJumping {
+		// g.anim.SetProps(JUMPING_PROPS)
+		g.anim.SetProps(DEFAULT_PROPS)
+	}
+
+	if g.isFalling {
+		// g.anim.SetProps(FALLING_PROPS)
+		g.anim.SetProps(DEFAULT_PROPS)
+	}
+
+	if g.isAttacking {
+		// g.anim.SetProps(ATTACK_PROPS)
+		g.anim.SetProps(DEFAULT_PROPS)
+	}
+
+	if g.isCrouching {
+		// g.anim.SetProps(CROUCH_PROPS)
+		g.anim.SetProps(DEFAULT_PROPS)
+	}
 }
 
 func (g *Ghost) Draw() {
@@ -75,47 +110,84 @@ func (g *Ghost) Draw() {
 }
 
 func (g *Ghost) Controls(dt float64) {
-	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_A) {
-		g.rb.AddForce(phy.Vector{X: 15, Y: 0})
-		g.anim.SetProps(RUNNING_R_PROPS)
-	}
-
-	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_D) {
-		g.rb.AddForce(phy.Vector{X: -5, Y: 0})
-		g.anim.SetProps(RUNNING_L_PROPS)
-	}
-
+	g.RunningControls(dt)
 	g.JumpControls(dt)
+	g.CrouchControls(dt)
+	g.AttackControls(dt)
+}
+
+func (g *Ghost) RunningControls(dt float64) {
+	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == -1 && !g.isAttacking {
+		g.rb.AddForce(phy.Vector{X: RUN_FORCE, Y: 0})
+		RUNNING_PROPS.SetFlip(sdl.FLIP_HORIZONTAL)
+		g.isRunning = true
+	}
+
+	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == 1 && !g.isAttacking {
+		g.rb.AddForce(phy.Vector{X: -RUN_FORCE, Y: 0})
+		RUNNING_PROPS.SetFlip(sdl.FLIP_NONE)
+		g.isRunning = true
+	}
 }
 
 func (g *Ghost) JumpControls(dt float64) {
-	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_W) && g.isGrounded {
+	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && g.isGrounded {
 		g.isJumping = true
 		g.isGrounded = false
 		g.rb.AddForce(phy.Vector{X: 0, Y: g.jumpForce})
 	}
 
-	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_W) && g.isJumping && g.jumpTime > 0 {
+	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && g.isJumping && g.jumpTime > 0 {
 		g.jumpTime -= dt
 		g.rb.AddForce(phy.Vector{X: 0, Y: g.jumpForce})
 	} else {
 		g.isJumping = false
 		g.jumpTime = JUMP_TIME
 	}
+
+	if g.rb.GetVelocity().Y > 0 && !g.isGrounded {
+		g.isFalling = true
+	} else {
+		g.isFalling = false
+	}
+
+	if g.isAttacking && g.attackTime > 0 {
+		g.attackTime -= dt
+	} else {
+		g.isAttacking = false
+		g.attackTime = ATTACK_TIME
+	}
+}
+
+func (g *Ghost) CrouchControls(dt float64) {
+	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == -1 {
+		g.rb.UnsetForces()
+		g.isCrouching = true
+	}
+}
+
+func (g *Ghost) AttackControls(dt float64) {
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_SPACE) {
+		g.rb.UnsetForces()
+		g.isAttacking = true
+	}
 }
 
 func (g *Ghost) Update(dt float64) {
-	g.anim.SetProps(DEFAULT_PROPS)
+	g.isRunning = false
+	g.isCrouching = false
 	g.rb.UnsetForces()
 
 	g.Controls(dt)
+	g.animationState()
+
 	g.rb.Update(dt)
 
 	disp := g.rb.GetDisplacement()
 
 	g.LastSafePosition.Set(phy.Vector{X: g.GetTransform().X, Y: g.LastSafePosition.Y})
 	g.transform.TranslateX(disp.X)
-	g.collider.Set(int32(g.transform.X), int32(g.transform.Y), 96, 96)
+	g.collider.Set(int32(g.transform.X), int32(g.transform.Y), 2*TILE_SIZE, 2*TILE_SIZE)
 
 	if CollisionHandlerInstance.GetInstance().MapCollision(g.collider.Get()) {
 		g.transform.Set(phy.Vector{X: g.LastSafePosition.X, Y: g.transform.Y})
@@ -123,7 +195,7 @@ func (g *Ghost) Update(dt float64) {
 
 	g.LastSafePosition.Set(phy.Vector{X: g.LastSafePosition.X, Y: g.GetTransform().Y})
 	g.transform.TranslateY(disp.Y)
-	g.collider.Set(int32(g.transform.X), int32(g.transform.Y), 96, 96)
+	g.collider.Set(int32(g.transform.X), int32(g.transform.Y), TILE_SIZE, 2*TILE_SIZE)
 
 	if CollisionHandlerInstance.GetInstance().MapCollision(g.collider.Get()) {
 		g.isGrounded = true
@@ -133,6 +205,7 @@ func (g *Ghost) Update(dt float64) {
 	}
 
 	g.updateOrigin()
+
 	g.anim.Update(dt)
 }
 

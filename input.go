@@ -9,6 +9,17 @@ type Input struct {
 	keyStates []uint8
 }
 
+type Axis int
+
+const (
+	HORIZONTAL Axis = iota
+	VERTICAL
+)
+
+func (a Axis) EnumIndex() int {
+	return int(a)
+}
+
 func (i *Input) GetInstance() *Input {
 	if i.instance == nil {
 		i.instance = &Input{
@@ -32,6 +43,27 @@ func (i *Input) Listen() {
 			}
 		}
 	}
+}
+
+func (i *Input) GetAxisKey(axis Axis) int {
+	switch axis {
+	case HORIZONTAL:
+		if i.IsKeyDown(sdl.SCANCODE_A) || i.IsKeyDown(sdl.SCANCODE_LEFT) {
+			return -1
+		}
+		if i.IsKeyDown(sdl.SCANCODE_D) || i.IsKeyDown(sdl.SCANCODE_RIGHT) {
+			return 1
+		}
+	case VERTICAL:
+		if i.IsKeyDown(sdl.SCANCODE_S) || i.IsKeyDown(sdl.SCANCODE_DOWN) {
+			return -1
+		}
+		if i.IsKeyDown(sdl.SCANCODE_W) || i.IsKeyDown(sdl.SCANCODE_UP) {
+			return 1
+		}
+	}
+
+	return 0
 }
 
 func (i *Input) IsKeyDown(keyCode sdl.Scancode) bool {
