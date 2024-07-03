@@ -77,7 +77,7 @@ func (g *Ghost) animationState() {
 	}
 }
 
-func (g *Ghost) Draw() {
+func (g Ghost) Draw() {
 	transform := g.GetTransform()
 	g.anim.Draw(int(transform.X), int(transform.Y), IMG_SIZE, IMG_SIZE, 1, 1)
 

@@ -18,8 +18,8 @@ func (gm *GameMap[l]) Draw() {
 	}
 }
 
-func (gm *GameMap[l]) Update() {
+func (gm *GameMap[l]) Update(dt float64) {
 	for _, layer := range gm.layers {
-		layer.Update()
+		layer.Update(dt)
 	}
 }

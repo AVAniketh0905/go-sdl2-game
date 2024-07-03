@@ -20,6 +20,10 @@ type comp interface {
 	~int32 | ~int | ~uint | ~float64 | ~float32
 }
 
+type GameObjectTypes interface {
+	Enemy | Ghost
+}
+
 func Limit[T comp](nval, ll, ul T) T {
 	if nval < ll {
 		return ll

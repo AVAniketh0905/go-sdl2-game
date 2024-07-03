@@ -9,7 +9,7 @@ import (
 
 type Object interface {
 	Draw()
-	Update()
+	Update(dt float64)
 	Destroy()
 }
 
@@ -50,15 +50,12 @@ func (g *GameObject) GetOrigin() *phy.Point {
 }
 
 func (g GameObject) Draw() {
-	println("Drawing")
 }
 
-func (g GameObject) Update() {
-	println("Updating")
+func (g GameObject) Update(dt float64) {
 }
 
 func (g GameObject) Destroy() {
-	println("Destroying")
 }
 
 // Character
@@ -72,4 +69,13 @@ func NewCharacter(props *Properties) *Character {
 	return &Character{
 		GameObject: *NewGameObject(props),
 	}
+}
+
+func (c Character) Draw() {
+}
+
+func (c Character) Update(dt float64) {
+}
+
+func (c Character) Destroy() {
 }

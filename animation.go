@@ -14,9 +14,9 @@ type Animation struct {
 	currFrame int
 }
 
-func NewAnimation() *Animation {
+func NewAnimation(repeat bool) *Animation {
 	return &Animation{
-		repeat:    true,
+		repeat:    repeat,
 		isEnded:   false,
 		currFrame: 0,
 	}
@@ -106,11 +106,23 @@ type SeqAnimation struct {
 	seqMap  map[string]*Sequence
 }
 
-func NewSeqAnimation() *SeqAnimation {
-	return &SeqAnimation{
-		currSeq: nil,
-		seqMap:  make(map[string]*Sequence),
+func NewSeqAnimation(repeat bool, path, seqId string) (*SeqAnimation, error) {
+	anim := SeqAnimation{
+		Animation: *NewAnimation(repeat),
+		currSeq:   nil,
+		seqMap:    make(map[string]*Sequence),
 	}
+
+	err := anim.parse(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse the enemy files, %v", err)
+	}
+	err = anim.SetCurrentSeq(seqId)
+	if err != nil {
+		return nil, fmt.Errorf("seq map is nil, %v", err)
+	}
+
+	return &anim, nil
 }
 
 func (sqa *SeqAnimation) SetCurrentSeq(seqId string) error {
@@ -119,6 +131,7 @@ func (sqa *SeqAnimation) SetCurrentSeq(seqId string) error {
 		return fmt.Errorf("failed to find %v in seq map", seqId)
 	}
 
+	sqa.currSeq = sqa.seqMap[seqId]
 	return nil
 }
 
@@ -126,7 +139,7 @@ func (sqa *SeqAnimation) SetRepeat(repeat bool) {
 	sqa.repeat = repeat
 }
 
-func (sqa *SeqAnimation) Parse(path string) error {
+func (sqa *SeqAnimation) parse(path string) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("failed to load data from file, %v, %v", path, err)
@@ -152,7 +165,6 @@ func (sqa *SeqAnimation) Parse(path string) error {
 
 		sqa.seqMap[xmlSeq.Id] = seq
 	}
-
 	return nil
 }
 
@@ -172,7 +184,7 @@ func (sqa *SeqAnimation) Update(dt float64) {
 		sqa.currFrame = (int(sdl.GetTicks64()) / sqa.currSeq.Speed) * sqa.currSeq.FrameCount
 	}
 
-	if !sqa.repeat && sqa.currFrame == (sqa.currSeq.FrameCount-1) {
+	if !sqa.repeat && sqa.currFrame >= (sqa.currSeq.FrameCount-1) {
 		sqa.isEnded = true
 		sqa.currFrame = sqa.currSeq.FrameCount - 1
 	}

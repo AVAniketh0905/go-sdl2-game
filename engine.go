@@ -9,13 +9,12 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-var PlayerGhost *Ghost
-
 type Engine struct {
-	instance *Engine
-	window   *sdl.Window
-	renderer *sdl.Renderer
-	levelMap *GameMap[TileLayer]
+	instance    *Engine
+	window      *sdl.Window
+	renderer    *sdl.Renderer
+	levelMap    *GameMap[TileLayer]
+	gameObjects []Object
 
 	IsRunning bool
 }
@@ -50,18 +49,6 @@ func EngineInit() (*Engine, error) {
 }
 
 func (e *Engine) Load() error {
-	// err := TextureManagerInstance.GetInstance().LoadTexture("bg", "assets/bg.png")
-	// if err != nil {
-	// 	return fmt.Errorf("failed to load bg texture: %v", err)
-	// }
-	// err = TextureManagerInstance.GetInstance().LoadTexture("ghost", "assets/ghost_anim.png")
-	// if err != nil {
-	// 	return fmt.Errorf("failed to load texture: %v", err)
-	// }
-	// err = TextureManagerInstance.GetInstance().LoadTexture("ghost_run", "assets/ghost_2.png")
-	// if err != nil {
-	// 	return fmt.Errorf("failed to load texture: %v", err)
-	// }
 	err := TextureManagerInstance.GetInstance().LoadAllTextures("assets/textures.xml")
 	if err != nil {
 		return fmt.Errorf("failed to load textures, %v", err)
@@ -74,7 +61,7 @@ func (e *Engine) Load() error {
 
 	e.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
 
-	PlayerGhost = NewGhost(&Properties{
+	playerGhost := NewGhost(&Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
 		width:     IMG_SIZE,
 		height:    IMG_SIZE,
@@ -82,7 +69,25 @@ func (e *Engine) Load() error {
 		flip:      sdl.FLIP_NONE,
 	})
 
-	CameraInstance.GetInstance().SetTarget(PlayerGhost.GetOrigin())
+	enemy, err := NewEnemy(
+		&Properties{
+			transform: &phy.Transform{X: 20, Y: 20},
+			width:     IMG_SIZE,
+			height:    IMG_SIZE,
+			texId:     "ghost_run",
+			flip:      sdl.FLIP_NONE,
+		},
+		false,
+		"assets/seqAnims.xml",
+		"boss_load",
+	)
+	if err != nil {
+		return fmt.Errorf("failed to load enemy, %v", err)
+	}
+
+	e.gameObjects = append(e.gameObjects, playerGhost, enemy)
+
+	CameraInstance.GetInstance().SetTarget(playerGhost.GetOrigin())
 
 	return nil
 }
@@ -114,9 +119,12 @@ func (e *Engine) GetLevelMap() *GameMap[TileLayer] {
 // Game Engine
 func (e *Engine) Update() {
 	dt := TimeInstance.GetInstance().GetDeltaTime()
-	e.levelMap.Update()
+	e.levelMap.Update(dt)
 	CameraInstance.GetInstance().Update(dt)
-	PlayerGhost.Update(dt)
+	// RMV PlayerGhost.Update(dt)
+	for _, gObj := range e.gameObjects {
+		gObj.Update(dt)
+	}
 }
 
 func (e *Engine) Events() {
@@ -128,7 +136,10 @@ func (e *Engine) Draw() {
 	e.renderer.Clear()
 	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
 	e.levelMap.Draw()
-	PlayerGhost.Draw()
+	// RMV PlayerGhost.Draw()
+	for _, gObj := range e.gameObjects {
+		gObj.Draw()
+	}
 	e.renderer.Present()
 }
 

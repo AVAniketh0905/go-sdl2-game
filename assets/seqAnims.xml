@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <animations>
-	<sequence id="name_of_seq" frameCount="3" speed="100" width="full_width" height="full_height">
+	<sequence id="boss_load" frameCount="2" speed="100" width="32" height="32">
 		<!-- textures are loaded from textures.xml -->
-		<frame texId="name_of_frame" />
-		<frame texId="name_of_frame" />
-		<frame texId="name_of_frame" />
+		<frame texId="ghost_2.png" />
+		<frame texId="ghost_anim" />
 	</sequence>
 </animations>
+<!--
+<sequence id="name_of_seq" frameCount="3" speed="100" width="full_width" height="full_height">
+textures are loaded from textures.xml
+<frame texId="name_of_frame" />
+<frame texId="name_of_frame" />
+<frame texId="name_of_frame" />
+</sequence>
+-->
