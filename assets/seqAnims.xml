@@ -2,8 +2,8 @@
 <animations>
 	<sequence id="boss_load" frameCount="2" speed="100" width="32" height="32">
 		<!-- textures are loaded from textures.xml -->
-		<frame texId="ghost_2.png" />
-		<frame texId="ghost_anim" />
+		<frame texId="player_idle" />
+		<frame texId="player_walk" />
 	</sequence>
 </animations>
 <!--

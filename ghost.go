@@ -31,7 +31,7 @@ type Ghost struct {
 
 func NewGhost(props *Properties) *Ghost {
 	collider := &phy.Collider{}
-	collider.SetBuffer(-5, 13, 0, 0)
+	collider.SetBuffer(-30, 0, 0, 0)
 	return &Ghost{
 		Character:        *NewCharacter(props),
 		anim:             NewSpriteAnimation(props.texId, 6, 80, sdl.FLIP_NONE),
@@ -50,30 +50,30 @@ func (g *Ghost) updateOrigin() {
 }
 
 func (g *Ghost) animationState() {
-	g.anim.SetProps("ghost", 0, 6, 80) // DEFAULT PROPS
+	g.anim.SetProps("player_idle", 0, 2, 80) // DEFAULT PROPS
 
 	if g.isRunning {
-		g.anim.SetProps("ghost_run", 0, 3, 80) // RUNNING PROPS
+		g.anim.SetProps("player_walk", 0, 4, 80) // RUNNING PROPS
 	}
 
 	if g.isJumping {
 		// g.anim.SetProps(JUMPING_PROPS)
-		g.anim.SetProps("ghost", 0, 6, 80)
+		g.anim.SetProps("player_walk", 0, 4, 80)
 	}
 
 	if g.isFalling {
 		// g.anim.SetProps(FALLING_PROPS)
-		g.anim.SetProps("ghost", 0, 6, 80)
+		g.anim.SetProps("player_damage", 0, 2, 80)
 	}
 
 	if g.isAttacking {
 		// g.anim.SetProps(ATTACK_PROPS)
-		g.anim.SetProps("ghost", 0, 6, 80)
+		g.anim.SetProps("player_attack", 0, 4, 50)
 	}
 
 	if g.isCrouching {
 		// g.anim.SetProps(CROUCH_PROPS)
-		g.anim.SetProps("ghost", 0, 6, 80)
+		g.anim.SetProps("player_death", 0, 4, 150)
 	}
 }
 

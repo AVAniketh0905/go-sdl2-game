@@ -61,11 +61,12 @@ func (e *Engine) Load() error {
 
 	e.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
 
+	// TODO: Change name to player
 	playerGhost := NewGhost(&Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
 		width:     IMG_SIZE,
 		height:    IMG_SIZE,
-		texId:     "ghost",
+		texId:     "player_idle",
 		flip:      sdl.FLIP_NONE,
 	})
 
@@ -74,7 +75,7 @@ func (e *Engine) Load() error {
 			transform: &phy.Transform{X: 20, Y: 20},
 			width:     IMG_SIZE,
 			height:    IMG_SIZE,
-			texId:     "ghost_run",
+			texId:     "player_idle",
 			flip:      sdl.FLIP_NONE,
 		},
 		false,

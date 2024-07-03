@@ -1,5 +1,8 @@
 <textures>
 	<texture id="bg" src="assets/bg.png" />
-	<texture id="ghost" src="assets/ghost_anim.png" />
-	<texture id="ghost_run" src="assets/ghost_2.png" />
+	<texture id="player_attack" src="assets/player/player_attack.png" />
+	<texture id="player_damage" src="assets/player/player_damage.png" />
+	<texture id="player_death" src="assets/player/player_death.png" />
+	<texture id="player_walk" src="assets/player/player_walk.png" />
+	<texture id="player_idle" src="assets/player/player_idle.png" />
 </textures>

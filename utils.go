@@ -3,7 +3,7 @@ package main
 const WIDTH = 800
 const HEIGHT = 600
 
-const IMG_SIZE = 32
+const IMG_SIZE = 64
 const TILE_SIZE = 32
 
 const JUMP_TIME = 15
