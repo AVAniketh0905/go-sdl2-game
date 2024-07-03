@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
+	"os"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -100,8 +102,15 @@ type Sequence struct {
 type SeqAnimation struct {
 	Animation
 
-	currSeq Sequence
-	seqMap  map[string]Sequence
+	currSeq *Sequence
+	seqMap  map[string]*Sequence
+}
+
+func NewSeqAnimation() *SeqAnimation {
+	return &SeqAnimation{
+		currSeq: nil,
+		seqMap:  make(map[string]*Sequence),
+	}
 }
 
 func (sqa *SeqAnimation) SetCurrentSeq(seqId string) error {
@@ -117,7 +126,35 @@ func (sqa *SeqAnimation) SetRepeat(repeat bool) {
 	sqa.repeat = repeat
 }
 
-func (sqa *SeqAnimation) Parse(path string) {}
+func (sqa *SeqAnimation) Parse(path string) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return fmt.Errorf("failed to load data from file, %v, %v", path, err)
+	}
+
+	var Anims XMLAnimations
+	err = xml.Unmarshal(data, &Anims)
+	if err != nil {
+		return fmt.Errorf("failed to convert to xml, %v", err)
+	}
+
+	for _, xmlSeq := range Anims.Seqs {
+		seq := &Sequence{
+			Speed:      xmlSeq.Speed,
+			FrameCount: xmlSeq.FrameCount,
+			Width:      xmlSeq.Width,
+			Height:     xmlSeq.Height,
+		}
+
+		for _, xmlF := range xmlSeq.Frames {
+			seq.TextureIds = append(seq.TextureIds, xmlF.TexId)
+		}
+
+		sqa.seqMap[xmlSeq.Id] = seq
+	}
+
+	return nil
+}
 
 func (sqa *SeqAnimation) Draw(x, y int, scaleX, scaleY float64, flip sdl.RendererFlip) error {
 	texId := sqa.currSeq.TextureIds[sqa.currFrame]
@@ -142,4 +179,22 @@ func (sqa *SeqAnimation) Update(dt float64) {
 }
 
 func (sqa *SeqAnimation) Destroy() {
+	sqa.seqMap = make(map[string]*Sequence)
+}
+
+type XMLAnimations struct {
+	Seqs []XMLSequence `xml:"sequence"`
+}
+
+type XMLSequence struct {
+	Id         string     `xml:"id,attr"`
+	FrameCount int        `xml:"frameCount,attr"`
+	Speed      int        `xml:"speed,attr"`
+	Width      int        `xml:"width,attr"`
+	Height     int        `xml:"height,attr"`
+	Frames     []XMLFrame `xml:"frame"`
+}
+
+type XMLFrame struct {
+	TexId string `xml:"texId,attr"`
 }

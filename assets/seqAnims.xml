@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animations>
+	<sequence id="name_of_seq" frameCount="3" speed="100" width="full_width" height="full_height">
+		<!-- textures are loaded from textures.xml -->
+		<frame texId="name_of_frame" />
+		<frame texId="name_of_frame" />
+		<frame texId="name_of_frame" />
+	</sequence>
+</animations>
