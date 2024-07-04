@@ -72,7 +72,7 @@ func (e *Engine) Load() error {
 
 	enemy, err := NewEnemy(
 		&Properties{
-			transform: &phy.Transform{X: 20, Y: 20},
+			transform: &phy.Transform{X: 120, Y: 00},
 			width:     IMG_SIZE,
 			height:    IMG_SIZE,
 			texId:     "player_idle",

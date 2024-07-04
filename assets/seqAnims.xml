@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <animations>
-	<sequence id="boss_load" frameCount="2" speed="100" width="32" height="32">
+	<sequence id="boss_load" frameCount="2" speed="500" width="64" height="64">
 		<!-- textures are loaded from textures.xml -->
 		<frame texId="player_idle" />
 		<frame texId="player_walk" />

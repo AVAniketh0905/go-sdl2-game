@@ -18,7 +18,7 @@ type Enemy struct {
 
 func NewEnemy(props *Properties, repeat bool, path, seqId string) (*Enemy, error) {
 	collider := &phy.Collider{}
-	collider.SetBuffer(-5, 13, 0, 0)
+	collider.SetBuffer(-5, -10, 0, 0)
 
 	anim, err := NewSeqAnimation(repeat, path, seqId)
 	if err != nil {
@@ -40,27 +40,30 @@ func (e *Enemy) Draw() {
 }
 
 func (e *Enemy) Update(dt float64) {
+	e.rb.UnsetForces()
 	e.rb.Update(dt)
-	e.LastSafePosition.Set(phy.Vector{X: e.transform.X, Y: e.LastSafePosition.Y})
-	e.transform.TranslateX(e.rb.GetPosition().X)
-	e.collider.Set(int32(e.transform.X), int32(e.transform.Y), 140, 140)
+
+	disp := e.rb.GetDisplacement()
+
+	e.LastSafePosition.Set(phy.Vector{X: e.GetTransform().X, Y: e.LastSafePosition.Y})
+	e.transform.TranslateX(disp.X)
+	e.collider.Set(int32(e.transform.X), int32(e.transform.Y), 2*TILE_SIZE, 2*TILE_SIZE)
 
 	if CollisionHandlerInstance.GetInstance().MapCollision(e.collider.Get()) {
 		e.transform.Set(phy.Vector{X: e.LastSafePosition.X, Y: e.transform.Y})
 	}
 
-	e.rb.Update(dt)
-	e.LastSafePosition.Set(phy.Vector{X: e.LastSafePosition.Y, Y: e.transform.Y})
-	e.transform.TranslateY(e.rb.GetPosition().Y)
-	e.collider.Set(int32(e.transform.X), int32(e.transform.Y), 140, 140)
+	e.LastSafePosition.Set(phy.Vector{X: e.LastSafePosition.Y, Y: e.GetTransform().Y})
+	e.transform.TranslateY(disp.Y)
+	e.collider.Set(int32(e.transform.X), int32(e.transform.Y), TILE_SIZE, TILE_SIZE)
 
 	if CollisionHandlerInstance.GetInstance().MapCollision(e.collider.Get()) {
-		e.transform.Set(phy.Vector{X: e.transform.X, Y: e.LastSafePosition.X})
+		e.transform.Set(phy.Vector{X: e.transform.X, Y: e.LastSafePosition.Y})
 	}
 
 	e.anim.Update(dt)
-	// if e.anim.IsEnded() {
-	// 	e.anim.SetCurrentSeq("enemy_idle")
-	// 	e.anim.SetRepeat(true)
-	// }
+	if e.anim.IsEnded() {
+		e.anim.SetCurrentSeq("player_idle")
+		e.anim.SetRepeat(true)
+	}
 }

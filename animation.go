@@ -181,10 +181,10 @@ func (sqa *SeqAnimation) Draw(x, y int, scaleX, scaleY float64, flip sdl.Rendere
 func (sqa *SeqAnimation) Update(dt float64) {
 	if sqa.repeat || !sqa.isEnded {
 		sqa.isEnded = false
-		sqa.currFrame = (int(sdl.GetTicks64()) / sqa.currSeq.Speed) * sqa.currSeq.FrameCount
+		sqa.currFrame = int(sdl.GetTicks64()/uint64(sqa.currSeq.Speed)) % sqa.currSeq.FrameCount
 	}
 
-	if !sqa.repeat && sqa.currFrame >= (sqa.currSeq.FrameCount-1) {
+	if !sqa.repeat && sqa.currFrame == (sqa.currSeq.FrameCount-1) {
 		sqa.isEnded = true
 		sqa.currFrame = sqa.currSeq.FrameCount - 1
 	}
