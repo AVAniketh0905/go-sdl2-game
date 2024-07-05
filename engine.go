@@ -61,8 +61,7 @@ func (e *Engine) Load() error {
 
 	e.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
 
-	// TODO: Change name to player
-	playerGhost := NewGhost(&Properties{
+	player := NewPlayer(&Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
 		width:     IMG_SIZE,
 		height:    IMG_SIZE,
@@ -70,25 +69,20 @@ func (e *Engine) Load() error {
 		flip:      sdl.FLIP_NONE,
 	})
 
-	enemy, err := NewEnemy(
-		&Properties{
-			transform: &phy.Transform{X: 120, Y: 00},
-			width:     IMG_SIZE,
-			height:    IMG_SIZE,
-			texId:     "player_idle",
-			flip:      sdl.FLIP_NONE,
-		},
-		false,
-		"assets/seqAnims.xml",
-		"boss_load",
-	)
+	enemy, err := NewEnemy(&Properties{
+		transform: &phy.Transform{X: 120, Y: 00},
+		width:     IMG_SIZE,
+		height:    IMG_SIZE,
+		texId:     "player_idle",
+		flip:      sdl.FLIP_NONE,
+	})
 	if err != nil {
 		return fmt.Errorf("failed to load enemy, %v", err)
 	}
 
-	e.gameObjects = append(e.gameObjects, playerGhost, enemy)
+	e.gameObjects = append(e.gameObjects, player, enemy)
 
-	CameraInstance.GetInstance().SetTarget(playerGhost.GetOrigin())
+	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
 
 	return nil
 }
@@ -122,7 +116,6 @@ func (e *Engine) Update() {
 	dt := TimeInstance.GetInstance().GetDeltaTime()
 	e.levelMap.Update(dt)
 	CameraInstance.GetInstance().Update(dt)
-	// RMV PlayerGhost.Update(dt)
 	for _, gObj := range e.gameObjects {
 		gObj.Update(dt)
 	}

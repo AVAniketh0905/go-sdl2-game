@@ -16,11 +16,12 @@ type Enemy struct {
 	LastSafePosition *phy.Vector
 }
 
-func NewEnemy(props *Properties, repeat bool, path, seqId string) (*Enemy, error) {
+func NewEnemy(props *Properties) (*Enemy, error) {
 	collider := &phy.Collider{}
 	collider.SetBuffer(-5, -10, 0, 0)
 
-	anim, err := NewSeqAnimation(repeat, path, seqId)
+	// texId is seqId for enemy
+	anim, err := NewSeqAnimation(true, "assets/seqAnims.xml", props.texId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load seq animation, %v", err)
 	}
