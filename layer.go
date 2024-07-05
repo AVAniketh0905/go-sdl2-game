@@ -1,7 +1,9 @@
 package main
 
 type Layer interface {
-	Object
+	Draw()
+	Update(dt float64)
+	Destroy()
 }
 
 type GameMap[l Layer] struct {

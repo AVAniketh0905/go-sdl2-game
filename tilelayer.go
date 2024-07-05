@@ -48,6 +48,14 @@ func NewTileLayer(tileSize int, rowCount int, colCount int, tileMap TileSetMap, 
 	}
 }
 
+func (tl *TileLayer) GetHeight() int {
+	return tl.colCount
+}
+
+func (tl *TileLayer) GetWidth() int {
+	return tl.rowCount
+}
+
 func (tl *TileLayer) GetTileMap() TileSetMap {
 	return tl.tileMap
 }

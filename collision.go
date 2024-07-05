@@ -9,21 +9,28 @@ type CollisionHandler struct {
 
 	collisionTileSetMap TileSetMap
 	collisionLayer      TileLayer
+
+	tileSize  int
+	mapWidth  int
+	mapHeight int
 }
 
 func (ch *CollisionHandler) GetInstance() *CollisionHandler {
-	lvlLayers := EngineInstance.GetInstance().GetLevelMap().GetLayers()
-	// TODO: TileLayer manually imputed as an genric
-	layer := lvlLayers[0]
-
 	if ch.instance == nil {
 		ch.instance = &CollisionHandler{
-			collisionLayer:      layer,
-			collisionTileSetMap: layer.GetTileMap(),
+			collisionLayer:      TileLayer{},
+			collisionTileSetMap: [][]int{},
 		}
 	}
 
 	return ch.instance
+}
+
+func (ch *CollisionHandler) SetCollisionMap(tileMap TileSetMap, tileSize int) {
+	ch.collisionTileSetMap = tileMap
+	ch.tileSize = tileSize
+	ch.mapHeight = len(tileMap)
+	ch.mapWidth = len(tileMap[0])
 }
 
 func (ch *CollisionHandler) CheckCollision(a, b *sdl.Rect) bool {
@@ -33,12 +40,10 @@ func (ch *CollisionHandler) CheckCollision(a, b *sdl.Rect) bool {
 }
 
 func (ch *CollisionHandler) MapCollision(a *sdl.Rect) bool {
-	// fixed numbers based on the map size
-	tileSize, rowCount, colCount := TILE_SIZE, 30, 30
-	l, r := a.X/int32(tileSize), (a.X+a.W)/int32(tileSize)
-	t, b := a.Y/int32(tileSize), (a.Y+a.H)/int32(tileSize)
-	l, r = max(l, 0), min(r, int32(colCount))
-	t, b = max(t, 0), min(b, int32(rowCount))
+	l, r := a.X/int32(ch.tileSize), (a.X+a.W)/int32(ch.tileSize)
+	t, b := a.Y/int32(ch.tileSize), (a.Y+a.H)/int32(ch.tileSize)
+	l, r = max(l, 0), min(r, int32(ch.mapWidth))
+	t, b = max(t, 0), min(b, int32(ch.mapHeight))
 
 	for i := l; i < r; i++ {
 		for j := t; j < b; j++ {

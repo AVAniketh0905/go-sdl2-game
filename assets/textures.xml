@@ -1,5 +1,5 @@
 <textures>
-	<texture id="bg" src="assets/bg.png" />
+	<texture id="bg" src="assets/static/bg.png" />
 	<texture id="player_attack" src="assets/player/player_attack.png" />
 	<texture id="player_damage" src="assets/player/player_damage.png" />
 	<texture id="player_death" src="assets/player/player_death.png" />

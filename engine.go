@@ -15,6 +15,7 @@ type Engine struct {
 	renderer    *sdl.Renderer
 	levelMap    *GameMap[TileLayer]
 	gameObjects []Object
+	states      []GameState
 
 	IsRunning bool
 }
@@ -60,6 +61,12 @@ func (e *Engine) Load() error {
 	}
 
 	e.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
+	lvlLayers := EngineInstance.GetInstance().GetLevelMap().GetLayers()
+	tileSize := lvlLayers[0].tileSize
+	width, height := lvlLayers[0].GetWidth()*tileSize, lvlLayers[0].GetHeight()*tileSize
+
+	CameraInstance.GetInstance().SetScreenLimit(int32(width), int32(height))
+	CollisionHandlerInstance.GetInstance().SetCollisionMap(lvlLayers[0].tileMap, lvlLayers[0].tileSize)
 
 	player, err := CreateObjectFactory("Player", &Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
@@ -113,6 +120,10 @@ func (e *Engine) GetLevelMap() *GameMap[TileLayer] {
 	return e.levelMap
 }
 
+func (e *Engine) PopState()                     {}
+func (e *Engine) PushState(curr *GameState)     {}
+func (e *Engine) ChangeState(target *GameState) {}
+
 // Game Engine
 func (e *Engine) Update() {
 	dt := TimeInstance.GetInstance().GetDeltaTime()
@@ -132,7 +143,6 @@ func (e *Engine) Draw() {
 	e.renderer.Clear()
 	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
 	e.levelMap.Draw()
-	// RMV PlayerGhost.Draw()
 	for _, gObj := range e.gameObjects {
 		gObj.Draw()
 	}
