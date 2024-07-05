@@ -73,7 +73,7 @@ func (e *Engine) Load() error {
 		transform: &phy.Transform{X: 120, Y: 00},
 		width:     IMG_SIZE,
 		height:    IMG_SIZE,
-		texId:     "player_idle",
+		texId:     "boss_load",
 		flip:      sdl.FLIP_NONE,
 	})
 	if err != nil {
