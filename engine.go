@@ -68,6 +68,9 @@ func (e *Engine) Load() error {
 		texId:     "player_idle",
 		flip:      sdl.FLIP_NONE,
 	})
+	if err != nil {
+		return err
+	}
 
 	enemy, err := CreateObjectFactory("Enemy", &Properties{
 		transform: &phy.Transform{X: 120, Y: 00},
