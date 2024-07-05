@@ -79,18 +79,14 @@ func (e *Engine) Load() error {
 		return err
 	}
 
-	enemy, err := CreateObjectFactory("Enemy", &Properties{
-		transform: &phy.Transform{X: 120, Y: 00},
-		width:     IMG_SIZE,
-		height:    IMG_SIZE,
-		texId:     "boss_load",
-		flip:      sdl.FLIP_NONE,
-	})
+	enemyObjs, err := ObjectParserInstance.GetInstance().Load("assets/objects.xml")
 	if err != nil {
-		return fmt.Errorf("failed to load enemy, %v", err)
+		return err
 	}
 
-	e.gameObjects = append(e.gameObjects, player, enemy)
+	e.gameObjects = append(e.gameObjects, player)
+	e.gameObjects = append(e.gameObjects, enemyObjs...)
+
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
 
 	return nil
