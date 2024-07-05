@@ -120,6 +120,7 @@ func (e *Engine) GetLevelMap() *GameMap[TileLayer] {
 	return e.levelMap
 }
 
+// Game States
 func (e *Engine) PopState()                     {}
 func (e *Engine) PushState(curr *GameState)     {}
 func (e *Engine) ChangeState(target *GameState) {}
