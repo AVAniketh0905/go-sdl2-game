@@ -61,7 +61,7 @@ func (e *Engine) Load() error {
 
 	e.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
 
-	player := NewPlayer(&Properties{
+	player, err := CreateObjectFactory("Player", &Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
 		width:     IMG_SIZE,
 		height:    IMG_SIZE,
@@ -69,7 +69,7 @@ func (e *Engine) Load() error {
 		flip:      sdl.FLIP_NONE,
 	})
 
-	enemy, err := NewEnemy(&Properties{
+	enemy, err := CreateObjectFactory("Enemy", &Properties{
 		transform: &phy.Transform{X: 120, Y: 00},
 		width:     IMG_SIZE,
 		height:    IMG_SIZE,
@@ -81,7 +81,6 @@ func (e *Engine) Load() error {
 	}
 
 	e.gameObjects = append(e.gameObjects, player, enemy)
-
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
 
 	return nil

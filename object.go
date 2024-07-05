@@ -11,6 +11,8 @@ type Object interface {
 	Draw()
 	Update(dt float64)
 	Destroy()
+	GetOrigin() *phy.Point
+	GetTransform() *phy.Transform
 }
 
 type Properties struct {
