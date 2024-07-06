@@ -82,10 +82,13 @@ func (p Player) Draw() {
 	p.anim.Draw(int(transform.X), int(transform.Y), IMG_SIZE, IMG_SIZE, 1, 1)
 
 	cam := CameraInstance.GetInstance().GetPosition()
-	box := p.collider.Get()
-	box.X -= int32(cam.X)
-	box.Y -= int32(cam.Y)
-	EngineInstance.GetInstance().GetRenderer().DrawRect(box)
+	// to account for initialization problems
+	if p.collider.Get() != nil {
+		box := p.collider.Get()
+		box.X -= int32(cam.X)
+		box.Y -= int32(cam.Y)
+		EngineInstance.GetInstance().GetRenderer().DrawRect(box)
+	}
 }
 
 func (p *Player) Controls(dt float64) {

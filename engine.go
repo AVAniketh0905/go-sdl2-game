@@ -2,20 +2,27 @@ package main
 
 import (
 	"fmt"
-	"go-game/phy"
 	"log"
 
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+type GStateType string
+
+const (
+	PLAY GStateType = "play"
+	MENU GStateType = "menu"
+)
+
 type Engine struct {
-	instance    *Engine
-	window      *sdl.Window
-	renderer    *sdl.Renderer
-	levelMap    *GameMap[TileLayer]
-	gameObjects []Object
-	states      []GameState
+	instance *Engine
+	window   *sdl.Window
+	renderer *sdl.Renderer
+
+	states map[GStateType]GameState
+
+	currStateName GStateType
 
 	IsRunning bool
 }
@@ -45,50 +52,26 @@ func EngineInit() (*Engine, error) {
 
 	e.window = window
 	e.renderer = renderer
+	e.states = map[GStateType]GameState{}
 	e.IsRunning = true
 	return &e, nil
 }
 
 func (e *Engine) Load() error {
-	err := TextureManagerInstance.GetInstance().LoadAllTextures("assets/textures.xml")
-	if err != nil {
-		return fmt.Errorf("failed to load textures, %v", err)
-	}
-
-	err = MapParserInstance.GetInstance().Load()
-	if err != nil {
-		return fmt.Errorf("failed to load map parser, %v", err)
-	}
-
-	e.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
-	lvlLayers := EngineInstance.GetInstance().GetLevelMap().GetLayers()
-	tileSize := lvlLayers[0].tileSize
-	width, height := lvlLayers[0].GetWidth()*tileSize, lvlLayers[0].GetHeight()*tileSize
-
-	CameraInstance.GetInstance().SetScreenLimit(int32(width), int32(height))
-	CollisionHandlerInstance.GetInstance().SetCollisionMap(lvlLayers[0].tileMap, lvlLayers[0].tileSize)
-
-	player, err := CreateObjectFactory("Player", &Properties{
-		transform: &phy.Transform{X: 10, Y: 20},
-		width:     IMG_SIZE,
-		height:    IMG_SIZE,
-		texId:     "player_idle",
-		flip:      sdl.FLIP_NONE,
-	})
+	playState, err := PlayStateInit()
 	if err != nil {
 		return err
 	}
 
-	enemyObjs, err := ObjectParserInstance.GetInstance().Load("assets/objects.xml")
+	menuState, err := MenuStateInit()
 	if err != nil {
 		return err
 	}
 
-	e.gameObjects = append(e.gameObjects, player)
-	e.gameObjects = append(e.gameObjects, enemyObjs...)
+	e.states["play"] = playState
+	e.states["menu"] = menuState
 
-	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
-
+	e.currStateName = MENU
 	return nil
 }
 
@@ -112,34 +95,24 @@ func (e *Engine) GetRenderer() *sdl.Renderer {
 	return e.renderer
 }
 
-func (e *Engine) GetLevelMap() *GameMap[TileLayer] {
-	return e.levelMap
+// Game State
+func (e *Engine) GetCurrState() GameState {
+	return e.states[e.currStateName]
 }
 
-// Game States
-func (e *Engine) PopState() *GameState {
-	lastState := &e.states[len(e.states)-1]
-	e.states = e.states[:len(e.states)-1]
-	return lastState
+func (e *Engine) GetCurrStateName() GStateType {
+	return e.currStateName
 }
 
-func (e *Engine) PushState(curr GameState) {
-	e.states = append(e.states, curr)
-}
-
-// TODO
-func (e *Engine) ChangeState(target *GameState) {
-
+func (e *Engine) SetCurrStateName(stateName GStateType) {
+	e.currStateName = stateName
 }
 
 // Game Engine
 func (e *Engine) Update() {
 	dt := TimeInstance.GetInstance().GetDeltaTime()
-	e.levelMap.Update(dt)
-	CameraInstance.GetInstance().Update(dt)
-	for _, gObj := range e.gameObjects {
-		gObj.Update(dt)
-	}
+	state := e.GetCurrState()
+	state.Update(dt)
 }
 
 func (e *Engine) Events() {
@@ -147,14 +120,8 @@ func (e *Engine) Events() {
 }
 
 func (e *Engine) Draw() {
-	e.renderer.SetDrawColor(0, 0, 0, 255)
-	e.renderer.Clear()
-	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
-	e.levelMap.Draw()
-	for _, gObj := range e.gameObjects {
-		gObj.Draw()
-	}
-	e.renderer.Present()
+	state := e.GetCurrState()
+	state.Draw()
 }
 
 func (e *Engine) Destroy() {

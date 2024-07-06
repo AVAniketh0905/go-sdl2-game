@@ -8,9 +8,8 @@ import (
 )
 
 type GameState interface {
-	Init()
 	Draw()
-	Update()
+	Update(float64)
 	Exit()
 }
 
@@ -21,21 +20,23 @@ type PlayState struct {
 	renderer    *sdl.Renderer
 }
 
-func (p *PlayState) Init() error {
-	p.renderer = EngineInstance.GetInstance().GetRenderer()
+func PlayStateInit() (*PlayState, error) {
+	var p PlayState
+	renderer := EngineInstance.GetInstance().GetRenderer()
 
 	err := TextureManagerInstance.GetInstance().LoadAllTextures("assets/textures.xml")
 	if err != nil {
-		return fmt.Errorf("failed to load textures, %v", err)
+		return nil, fmt.Errorf("failed to load textures, %v", err)
 	}
 
 	err = MapParserInstance.GetInstance().Load()
 	if err != nil {
-		return fmt.Errorf("failed to load map parser, %v", err)
+		return nil, fmt.Errorf("failed to load map parser, %v", err)
 	}
 
-	p.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
-	lvlLayers := EngineInstance.GetInstance().GetLevelMap().GetLayers()
+	levelMap := MapParserInstance.GetInstance().GetGameMap("level1")
+
+	lvlLayers := levelMap.GetLayers()
 	tileSize := lvlLayers[0].tileSize
 	width, height := lvlLayers[0].GetWidth()*tileSize, lvlLayers[0].GetHeight()*tileSize
 
@@ -50,32 +51,37 @@ func (p *PlayState) Init() error {
 		flip:      sdl.FLIP_NONE,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	enemyObjs, err := ObjectParserInstance.GetInstance().Load("assets/objects.xml")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
+	p.renderer = renderer
+	p.levelMap = levelMap
 	p.gameObjects = append(p.gameObjects, player)
 	p.gameObjects = append(p.gameObjects, enemyObjs...)
 
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
-	return nil
+
+	return &p, nil
 }
 
-func (p *PlayState) OpenMenu() {}
+func (p *PlayState) OpenMenu() {
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_M) {
+		EngineInstance.GetInstance().SetCurrStateName(MENU)
+	}
+}
 
 func (p *PlayState) PauseGame() {}
 
 func (p *PlayState) Events() {
-	// hanlde for menu settings
-	// Ctrl + M to toggle menu state on/off
-	// Esc to toggle play state on/off
+	p.OpenMenu()
 }
 
-func (p *PlayState) Draw() {
+func (p PlayState) Draw() {
 	p.renderer.SetDrawColor(0, 0, 0, 255)
 	p.renderer.Clear()
 	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
@@ -86,10 +92,9 @@ func (p *PlayState) Draw() {
 	p.renderer.Present()
 }
 
-func (p *PlayState) Update() {
+func (p PlayState) Update(dt float64) {
 	p.Events()
 
-	dt := TimeInstance.GetInstance().GetDeltaTime()
 	p.levelMap.Update(dt)
 	for _, gObj := range p.gameObjects {
 		gObj.Update(dt)
@@ -97,7 +102,7 @@ func (p *PlayState) Update() {
 	CameraInstance.GetInstance().Update(dt)
 }
 
-func (p *PlayState) Exit() {
+func (p PlayState) Exit() {
 	for _, gObj := range p.gameObjects {
 		gObj.Destroy()
 	}
@@ -109,26 +114,38 @@ type MenuState struct {
 	renderer *sdl.Renderer
 }
 
-func (m *MenuState) Init() {
+func MenuStateInit() (*MenuState, error) {
+	var m MenuState
 	m.renderer = EngineInstance.GetInstance().GetRenderer()
+
+	return &m, nil
 }
 
 func (m *MenuState) Settings() {}
 
-func (m *MenuState) StartGame() {}
+func (m *MenuState) StartGame() {
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_RSHIFT) {
+		EngineInstance.GetInstance().GetCurrState().Exit()
+		EngineInstance.GetInstance().SetCurrStateName(PLAY)
+	}
+}
 
 func (m *MenuState) SaveGame() {}
 
-func (m *MenuState) Events() {}
+func (m *MenuState) Events() {
+	m.StartGame()
+}
 
-func (m *MenuState) Draw() {
-	m.renderer.SetDrawColor(0, 0, 0, 50)
+func (m MenuState) Draw() {
+	m.renderer.SetDrawColor(0, 0, 0, 250)
 	m.renderer.Clear()
 	m.renderer.Present()
 }
 
-func (m *MenuState) Update() {}
+func (m MenuState) Update(dt float64) {
+	m.Events()
+}
 
-func (m *MenuState) Exit() {}
+func (m MenuState) Exit() {}
 
 func (m *MenuState) Quit() {}
