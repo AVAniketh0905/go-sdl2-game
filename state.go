@@ -53,18 +53,13 @@ func (p *PlayState) Init() error {
 		return err
 	}
 
-	enemy, err := CreateObjectFactory("Enemy", &Properties{
-		transform: &phy.Transform{X: 120, Y: 00},
-		width:     IMG_SIZE,
-		height:    IMG_SIZE,
-		texId:     "boss_load",
-		flip:      sdl.FLIP_NONE,
-	})
+	enemyObjs, err := ObjectParserInstance.GetInstance().Load("assets/objects.xml")
 	if err != nil {
-		return fmt.Errorf("failed to load enemy, %v", err)
+		return err
 	}
 
-	p.gameObjects = append(p.gameObjects, player, enemy)
+	p.gameObjects = append(p.gameObjects, player)
+	p.gameObjects = append(p.gameObjects, enemyObjs...)
 
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
 	return nil
@@ -108,3 +103,32 @@ func (p *PlayState) Exit() {
 	}
 	TextureManagerInstance.GetInstance().Destroy()
 }
+
+type MenuState struct {
+	GameState
+	renderer *sdl.Renderer
+}
+
+func (m *MenuState) Init() {
+	m.renderer = EngineInstance.GetInstance().GetRenderer()
+}
+
+func (m *MenuState) Settings() {}
+
+func (m *MenuState) StartGame() {}
+
+func (m *MenuState) SaveGame() {}
+
+func (m *MenuState) Events() {}
+
+func (m *MenuState) Draw() {
+	m.renderer.SetDrawColor(0, 0, 0, 50)
+	m.renderer.Clear()
+	m.renderer.Present()
+}
+
+func (m *MenuState) Update() {}
+
+func (m *MenuState) Exit() {}
+
+func (m *MenuState) Quit() {}

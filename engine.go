@@ -117,9 +117,20 @@ func (e *Engine) GetLevelMap() *GameMap[TileLayer] {
 }
 
 // Game States
-func (e *Engine) PopState()                     {}
-func (e *Engine) PushState(curr *GameState)     {}
-func (e *Engine) ChangeState(target *GameState) {}
+func (e *Engine) PopState() *GameState {
+	lastState := &e.states[len(e.states)-1]
+	e.states = e.states[:len(e.states)-1]
+	return lastState
+}
+
+func (e *Engine) PushState(curr GameState) {
+	e.states = append(e.states, curr)
+}
+
+// TODO
+func (e *Engine) ChangeState(target *GameState) {
+
+}
 
 // Game Engine
 func (e *Engine) Update() {
