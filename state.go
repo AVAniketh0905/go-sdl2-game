@@ -20,8 +20,6 @@ type PlayState struct {
 	levelMap *GameMap[TileLayer]
 
 	gameObjects []Object
-
-	btn *Button
 }
 
 func PlayStateInit() (*PlayState, error) {

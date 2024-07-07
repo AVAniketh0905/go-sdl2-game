@@ -16,7 +16,7 @@ var TimeInstance *Time = &Time{}
 var MapParserInstance *MapParser = &MapParser{}
 var ObjectParserInstance *ObjectParser = &ObjectParser{}
 
-func main() {
+func Core() {
 	err := EngineInstance.GetInstance().Load()
 	if err != nil {
 		log.Fatalf("Failed to load EngineInstance: %v", err)
@@ -31,4 +31,9 @@ func main() {
 		EngineInstance.GetInstance().Draw()
 		TimeInstance.GetInstance().Tick()
 	}
+}
+
+func main() {
+	Core()
+	// Build()
 }
