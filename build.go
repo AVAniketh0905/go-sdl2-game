@@ -15,6 +15,7 @@ const (
 	SrcPath   = "C:/mingw64/bin/" // Path where your SDL2 DLLs are located
 	BuildsDir = "builds/"         // Directory to store builds
 	ExeName   = "possessed"       // Name of your executable
+	AssetsDir = "assets"          // Directory of assets
 )
 
 func Build() {
@@ -31,14 +32,20 @@ func Build() {
 
 	// Copy SDL2 DLLs
 	fmt.Println("Copying SDL2 DLLs...")
-	if err := copyFile("SDL2.dll", buildDir); err != nil {
+	if err := copyFile("SDL2.dll", SrcPath, buildDir); err != nil {
 		log.Fatalf("Error copying SDL2.dll: %v", err)
 	}
-	if err := copyFile("SDL2_Image.dll", buildDir); err != nil {
+	if err := copyFile("SDL2_Image.dll", SrcPath, buildDir); err != nil {
 		log.Fatalf("Error copying SDL2_Image.dll: %v", err)
 	}
-	if err := copyFile("SDL2_Mixer.dll", buildDir); err != nil {
-		log.Fatalf("Error copying SDL2_Image.dll: %v", err)
+	if err := copyFile("SDL2_Mixer.dll", SrcPath, buildDir); err != nil {
+		log.Fatalf("Error copying SDL2_Mixer.dll: %v", err)
+	}
+
+	// Copy assets folder
+	fmt.Println("Copying assets folder...")
+	if err := copyDir(AssetsDir, buildDir+AssetsDir); err != nil {
+		log.Fatalf("Error copying assets folder: %v", err)
 	}
 
 	// Create ZIP archive
@@ -60,8 +67,8 @@ func buildExecutable(outputPath string) error {
 }
 
 // copyFile copies a file from sourcePath to destinationDir
-func copyFile(filename, destinationDir string) error {
-	sourcePath := filepath.Join(SrcPath, filename)
+func copyFile(filename, sourceDir, destinationDir string) error {
+	sourcePath := filepath.Join(sourceDir, filename)
 	destinationPath := filepath.Join(destinationDir, filename)
 
 	sourceFile, err := os.Open(sourcePath)
@@ -78,6 +85,56 @@ func copyFile(filename, destinationDir string) error {
 
 	_, err = io.Copy(destinationFile, sourceFile)
 	return err
+}
+
+// copyDir copies a whole directory recursively
+func copyDir(src, dst string) error {
+	src = filepath.Clean(src)
+	dst = filepath.Clean(dst)
+
+	info, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("%s is not a directory", src)
+	}
+
+	_, err = os.Stat(dst)
+	if os.IsNotExist(err) {
+		if err := os.MkdirAll(dst, info.Mode()); err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
+	}
+
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range entries {
+		srcPath := filepath.Join(src, entry.Name())
+		dstPath := filepath.Join(dst, entry.Name())
+
+		entryInfo, err := entry.Info()
+		if err != nil {
+			return err
+		}
+
+		if entryInfo.IsDir() {
+			if err := copyDir(srcPath, dstPath); err != nil {
+				return err
+			}
+		} else {
+			if err := copyFile(entry.Name(), src, dst); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
 // createZIPArchive creates a ZIP archive of the specified directory and saves it to outputPath
