@@ -37,6 +37,9 @@ func Build() {
 	if err := copyFile("SDL2_Image.dll", buildDir); err != nil {
 		log.Fatalf("Error copying SDL2_Image.dll: %v", err)
 	}
+	if err := copyFile("SDL2_Mixer.dll", buildDir); err != nil {
+		log.Fatalf("Error copying SDL2_Image.dll: %v", err)
+	}
 
 	// Create ZIP archive
 	zipPath := fmt.Sprintf("%sbuild_v%d.zip", BuildsDir, buildNumber)
