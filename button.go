@@ -48,7 +48,7 @@ func (b *Button) GetOrigin() *phy.Point {
 }
 
 func (b *Button) Draw() {
-	TextureManagerInstance.GetInstance().Draw(b.texId, int(b.transform.X), int(b.transform.Y), b.width, b.height, 0.5, 0.5, 1, b.flip)
+	TextureManagerInstance.GetInstance().Draw(b.texId, int(b.transform.X), int(b.transform.Y), b.width, b.height, 0.5, 0.5, 0, b.flip)
 }
 
 func (b *Button) Update(dt float64) {
