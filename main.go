@@ -5,13 +5,14 @@ import (
 )
 
 // EngineInstance is a global variable that holds the instance of the Engine (Singlerton)
-var EngineInstance *Engine = &Engine{}
-var CameraInstance *Camera = &Camera{}
 var InputInstance *Input = &Input{}
+var CameraInstance *Camera = &Camera{}
+var EngineInstance *Engine = &Engine{}
 
-var TextureManagerInstance *TextureManager = &TextureManager{}
-var CollisionHandlerInstance *CollisionHandler = &CollisionHandler{}
 var TimeInstance *Time = &Time{}
+var SoundMaangerInstance *SoundManager = &SoundManager{}
+var CollisionHandlerInstance *CollisionHandler = &CollisionHandler{}
+var TextureManagerInstance *TextureManager = &TextureManager{}
 
 var MapParserInstance *MapParser = &MapParser{}
 var ObjectParserInstance *ObjectParser = &ObjectParser{}
@@ -20,6 +21,10 @@ func Core() {
 	err := EngineInstance.GetInstance().Load()
 	if err != nil {
 		log.Fatalf("Failed to load EngineInstance: %v", err)
+	}
+	_, err = SoundMaangerInstance.GetInstance()
+	if err != nil {
+		log.Fatalf("Sound Manager failed to load, %v", err)
 	}
 	defer EngineInstance.GetInstance().Destroy()
 	defer TextureManagerInstance.GetInstance().Destroy()

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/veandco/go-sdl2/img"
+	"github.com/veandco/go-sdl2/mix"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -48,6 +49,10 @@ func EngineInit() (*Engine, error) {
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED|sdl.RENDERER_PRESENTVSYNC)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create renderer: %v", err)
+	}
+
+	if err := mix.Init(int(mix.INIT_MP3)); err != nil {
+		return nil, fmt.Errorf("failed to load sdl mixer, %v", err)
 	}
 
 	e.window = window
@@ -128,6 +133,7 @@ func (e *Engine) Destroy() {
 	e.renderer.Destroy()
 	e.window.Destroy()
 	img.Quit()
+	mix.Quit()
 	sdl.Quit()
 	e.IsRunning = false
 }
