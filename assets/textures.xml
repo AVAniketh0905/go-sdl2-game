@@ -1,8 +1,13 @@
 <textures>
 	<texture id="bg" src="assets/static/bg.png" />
+	<!--  -->
 	<texture id="player_attack" src="assets/player/player_attack.png" />
 	<texture id="player_damage" src="assets/player/player_damage.png" />
 	<texture id="player_death" src="assets/player/player_death.png" />
 	<texture id="player_walk" src="assets/player/player_walk.png" />
 	<texture id="player_idle" src="assets/player/player_idle.png" />
+	<!--  -->
+	<texture id="default_btn" src="assets/ui/default_btn.png" />
+	<texture id="hover_btn" src="assets/ui/hover_btn.png" />
+	<texture id="active_btn" src="assets/ui/active_btn.png" />
 </textures>

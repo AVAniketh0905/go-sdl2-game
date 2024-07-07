@@ -81,8 +81,8 @@ func (tm *TextureManager) Draw(id string, x, y, width, height int, scaleX, scale
 	dst := sdl.Rect{
 		X: int32(x) - int32(cam.X*scrollRatio),
 		Y: int32(y) - int32(cam.Y*scrollRatio),
-		W: int32(width * int(scaleX)),
-		H: int32(height * int(scaleY)),
+		W: int32(float64(width) * scaleX),
+		H: int32(float64(height) * scaleY),
 	}
 
 	err := EngineInstance.GetInstance().GetRenderer().CopyEx(tm.textureMap[id], &src, &dst, 0, nil, flip)

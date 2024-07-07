@@ -1,6 +1,8 @@
 package main
 
 import (
+	"go-game/phy"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -29,22 +31,6 @@ func (i *Input) GetInstance() *Input {
 	return i.instance
 }
 
-func (i *Input) Listen() {
-	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-		switch t := event.(type) {
-		case *sdl.QuitEvent:
-			EngineInstance.GetInstance().IsRunning = false
-		case *sdl.KeyboardEvent:
-			if t.Type == sdl.KEYDOWN {
-				i.KeyDown()
-				break
-			} else {
-				i.KeyUp()
-			}
-		}
-	}
-}
-
 func (i *Input) GetAxisKey(axis Axis) int {
 	switch axis {
 	case HORIZONTAL:
@@ -64,6 +50,27 @@ func (i *Input) GetAxisKey(axis Axis) int {
 	}
 
 	return 0
+}
+
+func (i *Input) GetMousePosition() (*phy.Point, uint32) {
+	x, y, state := sdl.GetMouseState()
+	return &phy.Point{X: float64(x), Y: float64(y)}, state
+}
+
+func (i *Input) Listen() {
+	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+		switch t := event.(type) {
+		case *sdl.QuitEvent:
+			EngineInstance.GetInstance().IsRunning = false
+		case *sdl.KeyboardEvent:
+			if t.Type == sdl.KEYDOWN {
+				i.KeyDown()
+				break
+			} else {
+				i.KeyUp()
+			}
+		}
+	}
 }
 
 func (i *Input) IsKeyDown(keyCode sdl.Scancode) bool {

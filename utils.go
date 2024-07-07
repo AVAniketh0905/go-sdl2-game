@@ -15,6 +15,12 @@ const JUMP_FORCE = 15
 const FPS = 60
 const DELTA_TIME = 1.5 // target delta time (ms)
 
+const (
+	DEFAULT_BTN = iota
+	HOVER_BTN
+	ACTIVE_BTN
+)
+
 // mimics an comparable interface but only for int/float
 type comp interface {
 	~int32 | ~int | ~uint | ~float64 | ~float32

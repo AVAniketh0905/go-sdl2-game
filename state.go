@@ -15,13 +15,17 @@ type GameState interface {
 
 type PlayState struct {
 	GameState
-	levelMap    *GameMap[TileLayer]
+	renderer *sdl.Renderer
+
+	levelMap *GameMap[TileLayer]
+
 	gameObjects []Object
-	renderer    *sdl.Renderer
+
+	btn *Button
 }
 
 func PlayStateInit() (*PlayState, error) {
-	var p PlayState
+	p := &PlayState{}
 	renderer := EngineInstance.GetInstance().GetRenderer()
 
 	err := TextureManagerInstance.GetInstance().LoadAllTextures("assets/textures.xml")
@@ -59,26 +63,39 @@ func PlayStateInit() (*PlayState, error) {
 		return nil, err
 	}
 
+	props := Properties{
+		transform: &phy.Transform{X: 10, Y: 20},
+		width:     128,
+		height:    128,
+		texId:     "",
+		flip:      sdl.FLIP_NONE,
+	}
+	texIds := []string{"default_btn", "hover_btn", "active_btn"}
+	homeBtn, err := NewButton(&props, texIds, p.OpenMenu)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create home btn, %v", err)
+	}
+
 	p.renderer = renderer
 	p.levelMap = levelMap
-	p.gameObjects = append(p.gameObjects, player)
+	p.gameObjects = append(p.gameObjects, player, homeBtn)
 	p.gameObjects = append(p.gameObjects, enemyObjs...)
 
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
 
-	return &p, nil
+	return p, nil
 }
 
 func (p *PlayState) OpenMenu() {
-	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_M) {
-		EngineInstance.GetInstance().SetCurrStateName(MENU)
-	}
+	EngineInstance.GetInstance().SetCurrStateName(MENU)
 }
 
 func (p *PlayState) PauseGame() {}
 
 func (p *PlayState) Events() {
-	p.OpenMenu()
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_M) {
+		p.OpenMenu()
+	}
 }
 
 func (p PlayState) Draw() {
@@ -124,16 +141,16 @@ func MenuStateInit() (*MenuState, error) {
 func (m *MenuState) Settings() {}
 
 func (m *MenuState) StartGame() {
-	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_RSHIFT) {
-		EngineInstance.GetInstance().GetCurrState().Exit()
-		EngineInstance.GetInstance().SetCurrStateName(PLAY)
-	}
+	EngineInstance.GetInstance().GetCurrState().Exit()
+	EngineInstance.GetInstance().SetCurrStateName(PLAY)
 }
 
 func (m *MenuState) SaveGame() {}
 
 func (m *MenuState) Events() {
-	m.StartGame()
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_RSHIFT) {
+		m.StartGame()
+	}
 }
 
 func (m MenuState) Draw() {
