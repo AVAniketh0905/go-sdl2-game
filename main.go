@@ -10,21 +10,18 @@ var CameraInstance *Camera = &Camera{}
 var EngineInstance *Engine = &Engine{}
 
 var TimeInstance *Time = &Time{}
-var SoundMaangerInstance *SoundManager = &SoundManager{}
+var SoundManagerInstance *SoundManager = &SoundManager{}
 var CollisionHandlerInstance *CollisionHandler = &CollisionHandler{}
 var TextureManagerInstance *TextureManager = &TextureManager{}
 
 var MapParserInstance *MapParser = &MapParser{}
 var ObjectParserInstance *ObjectParser = &ObjectParser{}
+var SoundParserInstance *SoundParser = &SoundParser{}
 
 func Core() {
 	err := EngineInstance.GetInstance().Load()
 	if err != nil {
 		log.Fatalf("Failed to load EngineInstance: %v", err)
-	}
-	_, err = SoundMaangerInstance.GetInstance()
-	if err != nil {
-		log.Fatalf("Sound Manager failed to load, %v", err)
 	}
 	defer EngineInstance.GetInstance().Destroy()
 	defer TextureManagerInstance.GetInstance().Destroy()

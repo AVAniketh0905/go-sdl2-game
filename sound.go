@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/veandco/go-sdl2/mix"
 )
@@ -18,9 +19,9 @@ type SoundManager struct {
 	effectMap map[string]*mix.Chunk
 }
 
-func (sm *SoundManager) GetInstance() (*SoundManager, error) {
+func (sm *SoundManager) GetInstance() *SoundManager {
 	if err := mix.OpenAudio(FREQ, uint16(mix.DEFAULT_FORMAT), 2, CHUNK_SIZE); err != nil {
-		return nil, fmt.Errorf("failed to run open audio, %v", err)
+		log.Fatalf("failed to run open audio, %v", err)
 	}
 
 	if sm.instance == nil {
@@ -30,7 +31,7 @@ func (sm *SoundManager) GetInstance() (*SoundManager, error) {
 		}
 	}
 
-	return sm.instance, nil
+	return sm.instance
 }
 
 func (sm *SoundManager) LoadMusic(id, src string) error {

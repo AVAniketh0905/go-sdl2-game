@@ -61,6 +61,11 @@ func PlayStateInit() (*PlayState, error) {
 		return nil, err
 	}
 
+	err = SoundParserInstance.GetInstance().Load("assets/sounds.xml")
+	if err != nil {
+		return nil, err
+	}
+
 	props := Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
 		width:     128,

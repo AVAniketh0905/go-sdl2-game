@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sounds>
+	<effect id="jump" src="assets/music/jump.ogg" />
+	<music id="eerie" src="assets/music/eerie.ogg" />
+	<music id="boss" src="assets/music/boss.ogg" />
+</sounds>
