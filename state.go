@@ -65,6 +65,7 @@ func PlayStateInit() (*PlayState, error) {
 	if err != nil {
 		return nil, err
 	}
+	SoundManagerInstance.GetInstance().PlayMusic("eerie")
 
 	props := Properties{
 		transform: &phy.Transform{X: 10, Y: 20},
