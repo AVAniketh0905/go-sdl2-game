@@ -37,5 +37,4 @@ func Core() {
 
 func main() {
 	Core()
-	// Build()
 }
