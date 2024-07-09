@@ -12,8 +12,8 @@ type Camera struct {
 	target      *phy.Point
 	position    *phy.Vector
 	viewBox     *sdl.Rect
-	sceneWidth  int32
-	sceneHeight int32
+	levelWidth  int32
+	levelHeight int32
 }
 
 func (c *Camera) GetInstance() *Camera {
@@ -29,8 +29,8 @@ func NewCamera() *Camera {
 		target:      &phy.Point{X: 0, Y: 0},
 		position:    &phy.Vector{X: WIDTH, Y: HEIGHT},
 		viewBox:     &sdl.Rect{},
-		sceneWidth:  WIDTH,
-		sceneHeight: HEIGHT,
+		levelWidth:  WIDTH,
+		levelHeight: HEIGHT,
 	}
 }
 
@@ -42,21 +42,25 @@ func (c *Camera) GetPosition() *phy.Vector {
 	return c.position
 }
 
-func (c *Camera) GetScreenWidth() int32 {
-	return c.sceneWidth
+func (c *Camera) GetLevelWidth() int32 {
+	return c.levelWidth
 }
 
-func (c *Camera) GetScreenHeight() int32 {
-	return c.sceneHeight
+func (c *Camera) GetLevelHeight() int32 {
+	return c.levelHeight
 }
 
 func (c *Camera) SetTarget(t *phy.Point) {
 	c.target = t
 }
 
-func (c *Camera) SetScreenLimit(w, h int32) {
-	c.sceneWidth = w
-	c.sceneHeight = h
+func (c *Camera) SetLevelLimit(w, h int32) {
+	c.levelWidth = w
+	c.levelHeight = h
+}
+
+func (c *Camera) SyncObject(pos *phy.Point, scrollRatio int) phy.Point {
+	return phy.Point{X: pos.X - c.position.X*float64(scrollRatio), Y: pos.Y - c.position.Y*float64(scrollRatio)}
 }
 
 func (c *Camera) Update(dt float64) error {
@@ -64,8 +68,8 @@ func (c *Camera) Update(dt float64) error {
 		return fmt.Errorf("target does not exist")
 	}
 
-	c.viewBox.X = Limit(0, int32(c.target.X)-c.sceneWidth/2, 2*c.sceneWidth-c.viewBox.W)
-	c.viewBox.Y = Limit(0, int32(c.target.Y)-c.sceneHeight/2, c.sceneHeight-c.viewBox.H)
+	c.viewBox.X = Limit(0, int32(c.target.X)-c.levelWidth/2, 2*c.levelWidth-c.viewBox.W)
+	c.viewBox.Y = Limit(0, int32(c.target.Y)-c.levelHeight/2, c.levelHeight-c.viewBox.H)
 
 	c.position = &phy.Vector{X: float64(c.viewBox.X), Y: float64(c.viewBox.Y)}
 

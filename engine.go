@@ -21,7 +21,8 @@ type Engine struct {
 	window   *sdl.Window
 	renderer *sdl.Renderer
 
-	states map[GStateType]GameState
+	screenSize *sdl.Rect
+	states     map[GStateType]GameState
 
 	currStateName GStateType
 
@@ -51,12 +52,19 @@ func EngineInit() (*Engine, error) {
 		return nil, fmt.Errorf("failed to create renderer: %v", err)
 	}
 
+	var DM sdl.DisplayMode
+
 	if err := mix.Init(int(mix.INIT_MP3)); err != nil {
 		return nil, fmt.Errorf("failed to load sdl mixer, %v", err)
 	}
 
 	e.window = window
 	e.renderer = renderer
+	DM, err = sdl.GetCurrentDisplayMode(0)
+	if err != nil {
+		return nil, err
+	}
+	e.screenSize = &sdl.Rect{X: 0, Y: 0, W: DM.W, H: DM.H}
 	e.states = map[GStateType]GameState{}
 	e.IsRunning = true
 	return &e, nil
@@ -98,6 +106,10 @@ func (e *Engine) GetWindow() *sdl.Window {
 
 func (e *Engine) GetRenderer() *sdl.Renderer {
 	return e.renderer
+}
+
+func (e *Engine) GetScreenSize() *sdl.Rect {
+	return e.screenSize
 }
 
 // Game State

@@ -13,7 +13,9 @@ var TimeInstance *Time = &Time{}
 var SoundManagerInstance *SoundManager = &SoundManager{}
 var CollisionHandlerInstance *CollisionHandler = &CollisionHandler{}
 var TextureManagerInstance *TextureManager = &TextureManager{}
+var LevelManagerInsatance *LevelManager = &LevelManager{}
 
+var TextureParserInstance *TextureParser = &TextureParser{}
 var MapParserInstance *MapParser = &MapParser{}
 var ObjectParserInstance *ObjectParser = &ObjectParser{}
 var SoundParserInstance *SoundParser = &SoundParser{}
@@ -25,7 +27,10 @@ func Core() {
 	}
 	defer EngineInstance.GetInstance().Destroy()
 	defer TextureManagerInstance.GetInstance().Destroy()
+	defer TextureParserInstance.GetInstance().Destroy()
 	defer MapParserInstance.GetInstance().Destroy()
+	defer ObjectParserInstance.GetInstance().Destroy()
+	defer SoundParserInstance.GetInstance().Destroy()
 
 	for EngineInstance.GetInstance().IsRunning {
 		EngineInstance.GetInstance().Events()
