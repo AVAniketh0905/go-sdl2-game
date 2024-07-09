@@ -85,6 +85,7 @@ func (e *Engine) Load() error {
 	e.states["menu"] = menuState
 
 	e.currStateName = MENU
+	SoundManagerInstance.GetInstance().PlayMusic("eerie")
 	return nil
 }
 
