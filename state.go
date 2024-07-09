@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-game/phy"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -16,6 +17,7 @@ type PlayState struct {
 	GameState
 	renderer *sdl.Renderer
 	bg       *sdl.Color
+	menuObjs []Object
 }
 
 func PlayStateInit() (*PlayState, error) {
@@ -26,6 +28,21 @@ func PlayStateInit() (*PlayState, error) {
 		return nil, fmt.Errorf("failed to load lvls, %v", err)
 	}
 	p.bg = LevelManagerInsatance.GetInstance().GetBgColor()
+
+	props := Properties{
+		transform: &phy.Transform{X: 10, Y: 20},
+		width:     128,
+		height:    128,
+		texId:     "",
+		flip:      sdl.FLIP_NONE,
+	}
+	texIds := []string{"default_btn", "hover_btn", "active_btn"}
+	button, err := NewButton(&props, texIds, p.OpenMenu)
+	if err != nil {
+		return nil, err
+	}
+
+	p.menuObjs = append(p.menuObjs, button)
 	return p, nil
 }
 
@@ -45,15 +62,24 @@ func (p PlayState) Draw() {
 	p.renderer.SetDrawColor(p.bg.R, p.bg.G, p.bg.B, p.bg.A)
 	p.renderer.Clear()
 	LevelManagerInsatance.GetInstance().Draw()
+	for _, mobj := range p.menuObjs {
+		mobj.Draw()
+	}
 	p.renderer.Present()
 }
 
 func (p PlayState) Update(dt float64) {
 	p.Events()
 	LevelManagerInsatance.GetInstance().Update(dt)
+	for _, mobj := range p.menuObjs {
+		mobj.Update(dt)
+	}
 }
 
 func (p PlayState) Exit() {
+	for _, mobj := range p.menuObjs {
+		mobj.Destroy()
+	}
 	LevelManagerInsatance.GetInstance().Destroy()
 }
 
