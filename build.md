@@ -4,7 +4,7 @@
 
 ### Easier Build
 
-Just run `build.go` file!
+Just run `build.bat` file!
 
 ### Manual Build
 
