@@ -7,10 +7,10 @@ const HEIGHT = 600
 const IMG_SIZE = 64
 const TILE_SIZE = 32
 
-// phy
+// player
 const JUMP_TIME = 15
 const ATTACK_TIME = 5
-
+const MAX_JUMP_HEIGHT = 10
 const RUN_FORCE = 5
 const JUMP_FORCE = 15
 

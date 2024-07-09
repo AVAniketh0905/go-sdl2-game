@@ -69,7 +69,7 @@ func (c *Camera) Update(dt float64) error {
 	}
 
 	c.viewBox.X = Limit(0, int32(c.target.X)-c.levelWidth/2, 2*c.levelWidth-c.viewBox.W)
-	c.viewBox.Y = Limit(0, int32(c.target.Y)-c.levelHeight/2, c.levelHeight-c.viewBox.H)
+	c.viewBox.Y = Limit(0, int32(c.target.Y)-2*c.levelHeight/3, c.levelHeight-c.viewBox.H)
 
 	c.position = &phy.Vector{X: float64(c.viewBox.X), Y: float64(c.viewBox.Y)}
 

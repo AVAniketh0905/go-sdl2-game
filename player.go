@@ -6,23 +6,38 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+type PState int
+
+const (
+	IDLE PState = iota
+	RUN
+	JUMP
+	FALL
+	CROUCH
+	ATTACK
+	DAMAGE
+	DEATH
+)
+
 type Player struct {
 	Character
 
 	anim *SpriteAnimation
 	rb   *phy.RigidBody
 
-	isJumping   bool
-	isFalling   bool
-	isGrounded  bool
-	isRunning   bool
-	isAttacking bool
-	isCrouching bool
+	// isJumping   bool
+	// isFalling   bool
+	canJump    bool
+	isGrounded bool
+	// isRunning   bool
+	// isAttacking bool
+	// isCrouching bool
+	state PState
 
-	jumpTime   float64
+	jumpHeight int
+	jumpForce  float64
+
 	attackTime float64
-
-	jumpForce float64
 
 	collider *phy.Collider
 
@@ -37,7 +52,8 @@ func NewPlayer(props *Properties) *Player {
 		anim:             NewSpriteAnimation(props.texId, 6, 80, sdl.FLIP_NONE),
 		rb:               phy.NewRigidBody(props.transform),
 		collider:         collider,
-		jumpTime:         JUMP_TIME,
+		state:            IDLE,
+		canJump:          true,
 		jumpForce:        JUMP_FORCE,
 		attackTime:       ATTACK_TIME,
 		LastSafePosition: &phy.Vector{},
@@ -50,30 +66,21 @@ func (p *Player) updateOrigin() {
 }
 
 func (p *Player) animationState() {
-	p.anim.SetProps("player_idle", 0, 2, 80) // DEFAULT PROPS
-
-	if p.isRunning {
+	switch p.state {
+	case IDLE:
+		p.anim.SetProps("player_idle", 0, 2, 80) // DEFAULT PROPS
+	case RUN:
 		p.anim.SetProps("player_walk", 0, 4, 80) // RUNNING PROPS
-	}
-
-	if p.isJumping {
-		// p.anim.SetProps(JUMPING_PROPS)
+	case JUMP:
 		p.anim.SetProps("player_walk", 0, 4, 80)
-	}
-
-	if p.isFalling {
-		// p.anim.SetProps(FALLING_PROPS)
+	case FALL:
 		p.anim.SetProps("player_damage", 0, 2, 80)
-	}
-
-	if p.isAttacking {
-		// p.anim.SetProps(ATTACK_PROPS)
-		p.anim.SetProps("player_attack", 0, 4, 50)
-	}
-
-	if p.isCrouching {
-		// p.anim.SetProps(CROUCH_PROPS)
+	case CROUCH:
 		p.anim.SetProps("player_death", 0, 4, 150)
+	case ATTACK:
+		p.anim.SetProps("player_attack", 0, 4, 50)
+	case DAMAGE:
+	case DEATH:
 	}
 }
 
@@ -99,65 +106,61 @@ func (p *Player) Controls(dt float64) {
 }
 
 func (p *Player) RunningControls(dt float64) {
-	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == -1 && !p.isAttacking {
+	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == -1 && p.state != ATTACK {
 		p.rb.AddForce(phy.Vector{X: RUN_FORCE, Y: 0})
 		p.anim.SetFlip(sdl.FLIP_HORIZONTAL)
-		p.isRunning = true
+		p.state = RUN
 	}
 
-	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == 1 && !p.isAttacking {
+	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == 1 && p.state != ATTACK {
 		p.rb.AddForce(phy.Vector{X: -RUN_FORCE, Y: 0})
 		p.anim.SetFlip(sdl.FLIP_NONE)
-		p.isRunning = true
+		p.state = RUN
 	}
 }
 
 func (p *Player) JumpControls(dt float64) {
 	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && p.isGrounded {
-		p.isJumping = true
+		p.canJump = false
 		p.isGrounded = false
+		p.jumpHeight = 0
+		p.state = JUMP
 		p.rb.AddForce(phy.Vector{X: 0, Y: p.jumpForce})
 	}
 
-	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && p.isJumping && p.jumpTime > 0 {
-		p.jumpTime -= dt
+	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && !p.isGrounded && p.jumpHeight < MAX_JUMP_HEIGHT {
+		p.jumpHeight++
+		p.state = JUMP
 		p.rb.AddForce(phy.Vector{X: 0, Y: p.jumpForce})
-	} else {
-		p.isJumping = false
-		p.jumpTime = JUMP_TIME
-	}
-
-	if p.rb.GetVelocity().Y > 0 && !p.isGrounded {
-		p.isFalling = true
-	} else {
-		p.isFalling = false
-	}
-
-	if p.isAttacking && p.attackTime > 0 {
-		p.attackTime -= dt
-	} else {
-		p.isAttacking = false
-		p.attackTime = ATTACK_TIME
 	}
 }
 
 func (p *Player) CrouchControls(dt float64) {
 	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == -1 {
 		p.rb.UnsetForces()
-		p.isCrouching = true
+		p.state = CROUCH
+	}
+
+	if p.rb.GetVelocity().Y > 0 && !p.isGrounded {
+		p.state = FALL
 	}
 }
 
 func (p *Player) AttackControls(dt float64) {
 	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_SPACE) {
 		p.rb.UnsetForces()
-		p.isAttacking = true
+		p.state = ATTACK
+	}
+
+	if p.state == ATTACK && p.attackTime > 0 {
+		p.attackTime -= dt
+	} else {
+		p.attackTime = ATTACK_TIME
 	}
 }
 
 func (p *Player) Update(dt float64) {
-	p.isRunning = false
-	p.isCrouching = false
+	p.state = IDLE
 	p.rb.UnsetForces()
 
 	p.Controls(dt)
