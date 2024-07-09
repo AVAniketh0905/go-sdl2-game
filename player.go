@@ -31,7 +31,7 @@ type Player struct {
 
 func NewPlayer(props *Properties) *Player {
 	collider := &phy.Collider{}
-	collider.SetBuffer(-30, 0, 0, 0)
+	collider.SetBuffer(-30, -5, 0, 0)
 	return &Player{
 		Character:        *NewCharacter(props),
 		anim:             NewSpriteAnimation(props.texId, 6, 80, sdl.FLIP_NONE),
