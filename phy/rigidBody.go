@@ -30,6 +30,10 @@ func NewRigidBody(transform *Transform) *RigidBody {
 	}
 }
 
+func (rb *RigidBody) SetPosition(pos *Vector) {
+	rb.position = pos
+}
+
 func (rb *RigidBody) AddVelocity(velocity Vector) {
 	rb.velocity.Add(&velocity)
 }
@@ -66,8 +70,10 @@ func (rb *RigidBody) UnsetForces() {
 	rb.forces = []Vector{}
 	rb.acceleration = &Vector{X: 0, Y: 0}
 	rb.velocity = &Vector{X: 0, Y: 0}
+	rb.position = &Vector{X: 0, Y: 0}
 }
 
+// TODO
 func (rb *RigidBody) Update(dt float64) {
 	rb.displacement = rb.position.Copy()
 

@@ -7,16 +7,16 @@ const HEIGHT = 600
 const IMG_SIZE = 64
 const TILE_SIZE = 32
 
+// time
+const FPS = 60
+const DELTA_TIME = 1.5 // target delta time (ms)
+
 // player
 const JUMP_TIME = 15
 const ATTACK_TIME = 5
 const MAX_JUMP_HEIGHT = 10
 const RUN_FORCE = 5
-const JUMP_FORCE = 15
-
-// time
-const FPS = 60
-const DELTA_TIME = 1.5 // target delta time (ms)
+const JUMP_FORCE = 15 // 15
 
 // ui
 const (

@@ -190,7 +190,6 @@ func (p *Player) Update(dt float64) {
 	}
 
 	p.updateOrigin()
-
 	p.anim.Update(dt)
 }
 
