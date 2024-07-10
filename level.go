@@ -49,7 +49,6 @@ func (lm *LevelManager) Init() error {
 	tileSize := lvlLayers[0].tileSize
 	width, height := lvlLayers[0].GetWidth()*tileSize, lvlLayers[0].GetHeight()*tileSize
 
-	CameraInstance.GetInstance().SetLevelLimit(int32(width), int32(height))
 	CollisionHandlerInstance.GetInstance().SetCollisionMap(lvlLayers[0].tileMap, lvlLayers[0].tileSize)
 
 	lm.bg = &sdl.Color{R: 0, G: 0, B: 0, A: 255}
@@ -74,6 +73,8 @@ func (lm *LevelManager) Init() error {
 	lm.gameObjects = append(lm.gameObjects, enemyObjs...)
 
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
+	CameraInstance.GetInstance().SetLevelLimit(WIDTH, HEIGHT)
+	CameraInstance.GetInstance().SetViewBox(0, 0, int32(width), int32(height))
 	return nil
 }
 
@@ -87,6 +88,7 @@ func (lm *LevelManager) Draw() {
 	for _, obj := range lm.gameObjects {
 		obj.Draw()
 	}
+	CameraInstance.GetInstance().Draw()
 }
 
 func (lm *LevelManager) Update(dt float64) {
@@ -94,6 +96,11 @@ func (lm *LevelManager) Update(dt float64) {
 	lm.levelMap.Update(dt)
 	for _, obj := range lm.gameObjects {
 		obj.Update(dt)
+	}
+	if CameraInstance.GetInstance().IsInside() {
+		fmt.Println("Person is inside")
+	} else {
+		fmt.Println("xxx")
 	}
 }
 

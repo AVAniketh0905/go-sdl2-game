@@ -7,10 +7,11 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+const CAM_OFFSET = 100
+
 type Camera struct {
 	instance    *Camera
 	target      *phy.Point
-	position    *phy.Vector
 	viewBox     *sdl.Rect
 	levelWidth  int32
 	levelHeight int32
@@ -26,20 +27,13 @@ func (c *Camera) GetInstance() *Camera {
 
 func NewCamera() *Camera {
 	return &Camera{
-		target:      &phy.Point{X: 0, Y: 0},
-		position:    &phy.Vector{X: WIDTH, Y: HEIGHT},
-		viewBox:     &sdl.Rect{},
-		levelWidth:  WIDTH,
-		levelHeight: HEIGHT,
+		target:  &phy.Point{X: 0, Y: 0},
+		viewBox: &sdl.Rect{},
 	}
 }
 
 func (c *Camera) GetViewBox() *sdl.Rect {
 	return c.viewBox
-}
-
-func (c *Camera) GetPosition() *phy.Vector {
-	return c.position
 }
 
 func (c *Camera) GetLevelWidth() int32 {
@@ -59,8 +53,27 @@ func (c *Camera) SetLevelLimit(w, h int32) {
 	c.levelHeight = h
 }
 
+func (c *Camera) SetViewBox(x, y, w, h int32) {
+	c.viewBox.X = x
+	c.viewBox.Y = y
+	c.viewBox.W = w
+	c.viewBox.H = h
+}
+
 func (c *Camera) SyncObject(pos *phy.Point, scrollRatio int) phy.Point {
-	return phy.Point{X: pos.X - c.position.X*float64(scrollRatio), Y: pos.Y - c.position.Y*float64(scrollRatio)}
+	return phy.Point{X: pos.X - float64(c.viewBox.X)*float64(scrollRatio), Y: pos.Y - float64(c.viewBox.Y)*float64(scrollRatio)}
+}
+
+func (c *Camera) IsInside() bool {
+	return c.target.X > float64(c.viewBox.X) && c.target.X < float64(c.viewBox.X+c.viewBox.W) &&
+		c.target.Y > float64(c.viewBox.Y) && c.target.Y < float64(c.viewBox.Y+c.viewBox.H)
+}
+
+func (c *Camera) Draw() {
+	r := EngineInstance.GetInstance().GetRenderer()
+	r.SetDrawColor(255, 255, 255, 255)
+	r.DrawRect(&sdl.Rect{X: int32(c.viewBox.X), Y: int32(c.viewBox.Y), W: int32(c.viewBox.X) + c.viewBox.W, H: int32(c.viewBox.Y) + c.viewBox.H})
+	r.SetDrawColor(0, 0, 0, 255)
 }
 
 func (c *Camera) Update(dt float64) error {
@@ -68,10 +81,10 @@ func (c *Camera) Update(dt float64) error {
 		return fmt.Errorf("target does not exist")
 	}
 
-	c.viewBox.X = Limit(0, int32(c.target.X)-c.levelWidth/2, 2*c.levelWidth-c.viewBox.W)
-	c.viewBox.Y = Limit(0, int32(c.target.Y)-2*c.levelHeight/3, c.levelHeight-c.viewBox.H)
+	offSetX := c.viewBox.W/2 + CAM_OFFSET
+	offSetY := c.viewBox.H/2 + CAM_OFFSET
 
-	c.position = &phy.Vector{X: float64(c.viewBox.X), Y: float64(c.viewBox.Y)}
-
+	c.viewBox.X = Limit(0, int32(c.target.X)-offSetX, c.viewBox.W)
+	c.viewBox.Y = Limit(0, int32(c.target.Y)-offSetY, c.viewBox.H)
 	return nil
 }

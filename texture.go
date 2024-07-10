@@ -37,7 +37,7 @@ func (tm *TextureManager) Draw(id string, x, y, width, height int, scaleX, scale
 }
 
 func (tm *TextureManager) DrawFrame(id string, x int, y int, width int, height int, currentRow int, currentFrame int, flip sdl.RendererFlip) error {
-	cam := CameraInstance.GetInstance().GetPosition()
+	cam := CameraInstance.GetInstance().GetViewBox()
 
 	src := sdl.Rect{
 		X: int32(width) * int32(currentFrame),
@@ -61,7 +61,7 @@ func (tm *TextureManager) DrawFrame(id string, x int, y int, width int, height i
 }
 
 func (tm *TextureManager) DrawTile(tileSetId string, tileSize int, x int, y int, row int, frame int, flip sdl.RendererFlip) error {
-	cam := CameraInstance.GetInstance().GetPosition()
+	cam := CameraInstance.GetInstance().GetViewBox()
 
 	src := sdl.Rect{
 		X: int32(tileSize * frame),

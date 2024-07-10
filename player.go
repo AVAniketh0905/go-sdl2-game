@@ -88,7 +88,7 @@ func (p Player) Draw() {
 	transform := p.GetTransform()
 	p.anim.Draw(int(transform.X), int(transform.Y), IMG_SIZE, IMG_SIZE, 1, 1)
 
-	cam := CameraInstance.GetInstance().GetPosition()
+	cam := CameraInstance.GetInstance().GetViewBox()
 	// to account for initialization problems
 	if p.collider.Get() != nil {
 		box := p.collider.Get()
