@@ -9,7 +9,7 @@ import (
 
 type Object interface {
 	Draw()
-	Update(dt float64)
+	Update(dt uint64)
 	Destroy()
 	GetOrigin() *phy.Point
 	GetTransform() *phy.Transform

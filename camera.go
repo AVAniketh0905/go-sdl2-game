@@ -76,7 +76,7 @@ func (c *Camera) Draw() {
 	r.SetDrawColor(0, 0, 0, 255)
 }
 
-func (c *Camera) Update(dt float64) error {
+func (c *Camera) Update(dt uint64) error {
 	if c.target == nil {
 		return fmt.Errorf("target does not exist")
 	}

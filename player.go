@@ -98,14 +98,14 @@ func (p Player) Draw() {
 	}
 }
 
-func (p *Player) Controls(dt float64) {
+func (p *Player) Controls(dt uint64) {
 	p.RunningControls(dt)
 	p.JumpControls(dt)
 	p.CrouchControls(dt)
 	p.AttackControls(dt)
 }
 
-func (p *Player) RunningControls(dt float64) {
+func (p *Player) RunningControls(dt uint64) {
 	if InputInstance.GetInstance().GetAxisKey(HORIZONTAL) == -1 && p.state != ATTACK {
 		p.rb.AddForce(phy.Vector{X: RUN_FORCE, Y: 0})
 		p.anim.SetFlip(sdl.FLIP_HORIZONTAL)
@@ -119,7 +119,7 @@ func (p *Player) RunningControls(dt float64) {
 	}
 }
 
-func (p *Player) JumpControls(dt float64) {
+func (p *Player) JumpControls(dt uint64) {
 	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && p.isGrounded {
 		p.canJump = false
 		p.isGrounded = false
@@ -135,7 +135,7 @@ func (p *Player) JumpControls(dt float64) {
 	}
 }
 
-func (p *Player) CrouchControls(dt float64) {
+func (p *Player) CrouchControls(dt uint64) {
 	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == -1 {
 		p.rb.UnsetForces()
 		p.state = CROUCH
@@ -146,20 +146,20 @@ func (p *Player) CrouchControls(dt float64) {
 	}
 }
 
-func (p *Player) AttackControls(dt float64) {
+func (p *Player) AttackControls(dt uint64) {
 	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_SPACE) {
 		p.rb.UnsetForces()
 		p.state = ATTACK
 	}
 
 	if p.state == ATTACK && p.attackTime > 0 {
-		p.attackTime -= dt
+		p.attackTime -= float64(dt)
 	} else {
 		p.attackTime = ATTACK_TIME
 	}
 }
 
-func (p *Player) Update(dt float64) {
+func (p *Player) Update(dt uint64) {
 	p.state = IDLE
 	p.rb.UnsetForces()
 

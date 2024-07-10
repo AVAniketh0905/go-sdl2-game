@@ -40,7 +40,7 @@ func (e *Enemy) Draw() {
 	e.anim.Draw(int(pos.X), int(pos.Y), 1, 1, e.flip)
 }
 
-func (e *Enemy) Update(dt float64) {
+func (e *Enemy) Update(dt uint64) {
 	e.rb.UnsetForces()
 	e.rb.Update(dt)
 

@@ -83,7 +83,7 @@ func (sa SpriteAnimation) Draw(x, y, width, height int, scaleX, scaleY float64) 
 	}
 }
 
-func (sa *SpriteAnimation) Update(dt float64) {
+func (sa *SpriteAnimation) Update(dt uint64) {
 	time := sdl.GetTicks64()
 	sa.currFrame = int(int(time)/(sa.speed)) % sa.frameCount
 }
@@ -178,7 +178,7 @@ func (sqa *SeqAnimation) Draw(x, y int, scaleX, scaleY float64, flip sdl.Rendere
 	return nil
 }
 
-func (sqa *SeqAnimation) Update(dt float64) {
+func (sqa *SeqAnimation) Update(dt uint64) {
 	if sqa.repeat || !sqa.isEnded {
 		sqa.isEnded = false
 		sqa.currFrame = int(sdl.GetTicks64()/uint64(sqa.currSeq.Speed)) % sqa.currSeq.FrameCount

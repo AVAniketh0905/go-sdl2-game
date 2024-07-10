@@ -54,7 +54,7 @@ func (rb *RigidBody) ApplyFriction(dt float64) {
 	rb.velocity.Div(friction)
 }
 
-func (rb *RigidBody) ApplyForces() {
+func (rb *RigidBody) ApplyForces(dt float64) {
 	rb.acceleration = &Vector{X: 0, Y: 0}
 	rb.AddGravity()
 
@@ -72,19 +72,19 @@ func (rb *RigidBody) UnsetForces() {
 }
 
 // TODO
-func (rb *RigidBody) Update(dt float64) {
+func (rb *RigidBody) Update(dt uint64) {
 	rb.displacement = rb.position.Copy()
 
-	rb.ApplyForces()
+	rb.ApplyForces(float64(dt))
 
 	acc_copied := rb.acceleration.Copy()
-	acc_copied.Mult(dt)
+	acc_copied.Mult(float64(dt))
 	rb.velocity.Add(acc_copied)
 
-	rb.ApplyFriction(dt)
+	rb.ApplyFriction(float64(dt))
 
 	vel_copied := rb.velocity.Copy()
-	vel_copied.Mult(dt)
+	vel_copied.Mult(float64(dt))
 	rb.position.Add(vel_copied)
 
 	rb.displacement.Sub(rb.position)

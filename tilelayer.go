@@ -102,7 +102,7 @@ func (tl TileLayer) Draw() {
 	}
 }
 
-func (tl TileLayer) Update(dt float64) {
+func (tl TileLayer) Update(dt uint64) {
 }
 
 func (tl TileLayer) Destroy() {

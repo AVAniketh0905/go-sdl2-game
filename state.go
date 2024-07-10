@@ -9,7 +9,7 @@ import (
 
 type GameState interface {
 	Draw()
-	Update(float64)
+	Update(uint64)
 	Exit()
 }
 
@@ -68,7 +68,7 @@ func (p PlayState) Draw() {
 	p.renderer.Present()
 }
 
-func (p PlayState) Update(dt float64) {
+func (p PlayState) Update(dt uint64) {
 	p.Events()
 	LevelManagerInsatance.GetInstance().Update(dt)
 	for _, mobj := range p.menuObjs {
@@ -116,7 +116,7 @@ func (m MenuState) Draw() {
 	m.renderer.Present()
 }
 
-func (m MenuState) Update(dt float64) {
+func (m MenuState) Update(dt uint64) {
 	m.Events()
 }
 

@@ -2,7 +2,7 @@ package main
 
 type Layer interface {
 	Draw()
-	Update(dt float64)
+	Update(dt uint64)
 	Destroy()
 }
 
@@ -20,7 +20,7 @@ func (gm *GameMap[l]) Draw() {
 	}
 }
 
-func (gm *GameMap[l]) Update(dt float64) {
+func (gm *GameMap[l]) Update(dt uint64) {
 	for _, layer := range gm.layers {
 		layer.Update(dt)
 	}

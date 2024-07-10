@@ -91,7 +91,7 @@ func (lm *LevelManager) Draw() {
 	CameraInstance.GetInstance().Draw()
 }
 
-func (lm *LevelManager) Update(dt float64) {
+func (lm *LevelManager) Update(dt uint64) {
 	CameraInstance.GetInstance().Update(dt)
 	lm.levelMap.Update(dt)
 	for _, obj := range lm.gameObjects {

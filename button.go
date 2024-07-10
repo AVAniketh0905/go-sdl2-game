@@ -51,7 +51,7 @@ func (b *Button) Draw() {
 	TextureManagerInstance.GetInstance().Draw(b.texId, int(b.transform.X), int(b.transform.Y), b.width, b.height, 0.5, 0.5, 0, b.flip)
 }
 
-func (b *Button) Update(dt float64) {
+func (b *Button) Update(dt uint64) {
 	mousePos, state := InputInstance.GetInstance().GetMousePosition()
 
 	if b.IsPointInMouse(mousePos) {

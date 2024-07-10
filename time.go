@@ -25,10 +25,10 @@ func (t *Time) GetDeltaTime() float64 {
 func (t *Time) Tick() {
 	currentTime := float64(sdl.GetTicks64())
 
-	t.deltaTime += (currentTime - t.lastTime)
+	t.deltaTime = (currentTime - t.lastTime)
 
-	if t.deltaTime >= DELTA_TIME {
-		t.deltaTime = DELTA_TIME
+	if t.deltaTime > 1.5 {
+		t.deltaTime = 1.5
 	}
 
 	t.lastTime = float64(sdl.GetTicks64())

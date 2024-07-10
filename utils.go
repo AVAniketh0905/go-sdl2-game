@@ -9,13 +9,14 @@ const TILE_SIZE = 32
 
 // time
 const FPS = 30
-const DELTA_TIME = 1.5 // target delta time (ms)
+
+// const DELTA_TIME = 1.5 // target delta time (ms)
 
 // player
 const ATTACK_TIME = 5
 const MAX_JUMP_HEIGHT = 10
 const RUN_FORCE = 5
-const JUMP_FORCE = 15
+const JUMP_FORCE = 10
 
 // ui
 const (
