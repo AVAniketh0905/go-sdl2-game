@@ -58,6 +58,11 @@ func (v *Vector) Set(vec Vector) {
 	v.Y = vec.Y
 }
 
+func (v *Vector) Clamp(min, max float64) {
+	v.X = math.Min(math.Max(v.X, min), max)
+	v.Y = math.Min(math.Max(v.Y, min), max)
+}
+
 func (v *Vector) Copy() *Vector {
 	return &Vector{X: v.X, Y: v.Y}
 }

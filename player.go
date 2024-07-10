@@ -189,6 +189,14 @@ func (p *Player) Update(dt float64) {
 		p.isGrounded = false
 	}
 
+	p.LastSafePosition.Set(phy.Vector{X: p.GetTransform().X, Y: p.LastSafePosition.Y})
+	if p.state == CROUCH {
+		p.collider.Set(int32(p.transform.X), int32(p.transform.Y)+TILE_SIZE/2, TILE_SIZE, 2*TILE_SIZE)
+		if CollisionHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
+			p.transform.Set(phy.Vector{X: p.transform.X, Y: p.LastSafePosition.Y})
+		}
+	}
+
 	p.updateOrigin()
 	p.anim.Update(dt)
 }

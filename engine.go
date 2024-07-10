@@ -127,8 +127,7 @@ func (e *Engine) SetCurrStateName(stateName GStateType) {
 }
 
 // Game Engine
-func (e *Engine) Update() {
-	dt := TimeInstance.GetInstance().GetDeltaTime()
+func (e *Engine) Update(dt float64) {
 	state := e.GetCurrState()
 	state.Update(dt)
 }

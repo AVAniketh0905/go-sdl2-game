@@ -34,7 +34,7 @@ func Core() {
 
 	for EngineInstance.GetInstance().IsRunning {
 		EngineInstance.GetInstance().Events()
-		EngineInstance.GetInstance().Update()
+		EngineInstance.GetInstance().Update(TimeInstance.GetInstance().GetDeltaTime())
 		EngineInstance.GetInstance().Draw()
 		TimeInstance.GetInstance().Tick()
 	}

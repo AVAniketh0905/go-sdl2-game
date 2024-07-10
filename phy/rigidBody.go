@@ -2,7 +2,9 @@ package phy
 
 const UNIT_MASS = 1.0
 const GRAVITY = 9.8
-const FRICTION_COEFF = 0.1
+const DAMPING_COEFF = 0.9
+
+const MAX_VELOCITY = 10
 
 type RigidBody struct {
 	mass float64
@@ -36,6 +38,7 @@ func (rb *RigidBody) SetPosition(pos *Vector) {
 
 func (rb *RigidBody) AddVelocity(velocity Vector) {
 	rb.velocity.Add(&velocity)
+	rb.velocity.Clamp(-MAX_VELOCITY, MAX_VELOCITY)
 }
 
 func (rb *RigidBody) AddForce(force Vector) {
@@ -46,12 +49,9 @@ func (rb *RigidBody) AddGravity() {
 	rb.AddForce(*rb.gravity)
 }
 
-func (rb *RigidBody) ApplyFriction() {
-	friction := rb.velocity.Copy()
-	friction.Normalize()
-	friction.Mult(-1)
-	friction.Mult(FRICTION_COEFF)
-	rb.AddForce(*friction)
+func (rb *RigidBody) ApplyFriction(dt float64) {
+	friction := 1 + DAMPING_COEFF*dt
+	rb.velocity.Div(friction)
 }
 
 func (rb *RigidBody) ApplyForces() {
@@ -62,8 +62,6 @@ func (rb *RigidBody) ApplyForces() {
 		force.Div(rb.mass)
 		rb.acceleration.Add(&force)
 	}
-
-	rb.ApplyFriction()
 }
 
 func (rb *RigidBody) UnsetForces() {
@@ -82,6 +80,8 @@ func (rb *RigidBody) Update(dt float64) {
 	acc_copied := rb.acceleration.Copy()
 	acc_copied.Mult(dt)
 	rb.velocity.Add(acc_copied)
+
+	rb.ApplyFriction(dt)
 
 	vel_copied := rb.velocity.Copy()
 	vel_copied.Mult(dt)
