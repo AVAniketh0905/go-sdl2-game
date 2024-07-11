@@ -9,14 +9,14 @@ const TILE_SIZE = 32
 
 // time
 const FPS = 30
-
-// const DELTA_TIME = 1.5 // target delta time (ms)
+const TIME_DELAY = 2
+const TIME_OFFSET = 1
 
 // player
 const ATTACK_TIME = 5
 const MAX_JUMP_HEIGHT = 10
-const RUN_FORCE = 5
-const JUMP_FORCE = 10
+const RUN_FORCE = 2.5
+const JUMP_FORCE = 12
 
 // ui
 const (
@@ -48,4 +48,8 @@ func Limit[T comp](nval, ll, ul T) T {
 	}
 
 	return nval
+}
+
+func Integrate(t, dt float64) {
+
 }

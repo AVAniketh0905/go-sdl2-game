@@ -77,15 +77,21 @@ func (rb *RigidBody) Update(dt uint64) {
 
 	rb.ApplyForces(float64(dt))
 
-	acc_copied := rb.acceleration.Copy()
-	acc_copied.Mult(float64(dt))
-	rb.velocity.Add(acc_copied)
+	rb.velocity.X += rb.acceleration.X * float64(dt)
+	rb.velocity.Y += rb.acceleration.Y * float64(dt)
+
+	// acc_copied := rb.acceleration.Copy()
+	// acc_copied.Mult(float64(dt))
+	// rb.velocity.Add(acc_copied)
 
 	rb.ApplyFriction(float64(dt))
 
-	vel_copied := rb.velocity.Copy()
-	vel_copied.Mult(float64(dt))
-	rb.position.Add(vel_copied)
+	rb.position.X += rb.velocity.X * float64(dt)
+	rb.position.Y += rb.velocity.Y * float64(dt)
+
+	// vel_copied := rb.velocity.Copy()
+	// vel_copied.Mult(float64(dt))
+	// rb.position.Add(vel_copied)
 
 	rb.displacement.Sub(rb.position)
 }

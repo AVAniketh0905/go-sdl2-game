@@ -7,8 +7,8 @@ import (
 type Time struct {
 	instance *Time
 
-	deltaTime float64
-	lastTime  float64
+	deltaTime uint64
+	lastTime  uint64
 }
 
 func (t *Time) GetInstance() *Time {
@@ -18,18 +18,17 @@ func (t *Time) GetInstance() *Time {
 	return t.instance
 }
 
-func (t *Time) GetDeltaTime() float64 {
+func (t *Time) GetDeltaTime() uint64 {
 	return t.deltaTime
 }
 
 func (t *Time) Tick() {
-	currentTime := float64(sdl.GetTicks64())
-
+	currentTime := sdl.GetTicks64()
 	t.deltaTime = (currentTime - t.lastTime)
 
-	if t.deltaTime > 1.5 {
-		t.deltaTime = 1.5
+	if t.deltaTime > TIME_DELAY {
+		t.deltaTime = TIME_DELAY
 	}
 
-	t.lastTime = float64(sdl.GetTicks64())
+	t.lastTime = sdl.GetTicks64()
 }

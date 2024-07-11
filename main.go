@@ -1,10 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"log"
-
-	"github.com/veandco/go-sdl2/sdl"
 )
 
 // EngineInstance is a global variable that holds the instance of the Engine (Singlerton)
@@ -35,19 +32,11 @@ func Core() {
 	defer ObjectParserInstance.GetInstance().Destroy()
 	defer SoundParserInstance.GetInstance().Destroy()
 
-	var lastTime uint64
 	for EngineInstance.GetInstance().IsRunning {
-		startTime := sdl.GetTicks64()
-		dt := startTime - lastTime
-
-		if dt > uint64(1000/FPS) {
-			fmt.Println("FPS: ", 1000.0/float64(dt))
-			lastTime = startTime
-
-			EngineInstance.GetInstance().Events()
-			EngineInstance.GetInstance().Update(dt / 10)
-			EngineInstance.GetInstance().Draw()
-		}
+		dt := TimeInstance.GetInstance().GetDeltaTime()
+		EngineInstance.GetInstance().Events()
+		EngineInstance.GetInstance().Update(dt)
+		EngineInstance.GetInstance().Draw()
 		TimeInstance.GetInstance().Tick()
 	}
 }

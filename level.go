@@ -97,11 +97,6 @@ func (lm *LevelManager) Update(dt uint64) {
 	for _, obj := range lm.gameObjects {
 		obj.Update(dt)
 	}
-	if CameraInstance.GetInstance().IsInside() {
-		fmt.Println("Person is inside")
-	} else {
-		fmt.Println("xxx")
-	}
 }
 
 func (lm *LevelManager) Destroy() {
