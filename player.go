@@ -120,6 +120,7 @@ func (p *Player) RunningControls(dt uint64) {
 }
 
 func (p *Player) JumpControls(dt uint64) {
+
 	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && p.isGrounded {
 		p.canJump = false
 		p.isGrounded = false
@@ -128,7 +129,7 @@ func (p *Player) JumpControls(dt uint64) {
 		p.rb.AddForce(phy.Vector{X: 0, Y: p.jumpForce})
 	}
 
-	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && !p.isGrounded && p.jumpHeight < MAX_JUMP_HEIGHT {
+	if InputInstance.GetInstance().GetAxisKey(VERTICAL) == 1 && !p.isGrounded && p.jumpHeight < phy.MAX_JUMP_HEIGHT {
 		p.jumpHeight++
 		p.state = JUMP
 		p.rb.AddForce(phy.Vector{X: 0, Y: p.jumpForce})

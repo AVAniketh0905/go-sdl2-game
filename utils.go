@@ -8,15 +8,14 @@ const IMG_SIZE = 64
 const TILE_SIZE = 32
 
 // time
-const FPS = 30
+const FPS = 60
 const TIME_DELAY = 2
 const TIME_OFFSET = 1
 
 // player
 const ATTACK_TIME = 5
-const MAX_JUMP_HEIGHT = 10
-const RUN_FORCE = 2.5
 const JUMP_FORCE = 12
+const RUN_FORCE = 1
 
 // ui
 const (
