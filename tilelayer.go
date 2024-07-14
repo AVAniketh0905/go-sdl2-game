@@ -61,8 +61,8 @@ func (tl *TileLayer) GetTileMap() TileSetMap {
 }
 
 func (tl TileLayer) Draw() {
-	for i := range tl.rowCount {
-		for j := range tl.colCount {
+	for i := range tl.colCount {
+		for j := range tl.rowCount {
 			tileId := tl.tileMap[i][j]
 
 			if tileId == 0 {
@@ -97,6 +97,7 @@ func (tl TileLayer) Draw() {
 					tileCol,
 					sdl.FLIP_NONE,
 				)
+
 			}
 		}
 	}

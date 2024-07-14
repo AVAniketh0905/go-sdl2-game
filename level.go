@@ -36,7 +36,7 @@ func (lm *LevelManager) Init() error {
 	if err != nil {
 		return fmt.Errorf("failed to load textures, %v", err)
 	}
-	err = MapParserInstance.GetInstance().Load("level1", "assets/maps/ghost_tilemap.tmx")
+	err = MapParserInstance.GetInstance().Load("level1", "assets/maps/go-sdl2-level_1.tmx")
 	if err != nil {
 		return fmt.Errorf("failed to load map, %v", err)
 	}
