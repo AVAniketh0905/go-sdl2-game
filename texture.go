@@ -81,6 +81,8 @@ func (tm *TextureManager) DrawTile(tileSetId string, tileSize int, x int, y int,
 	if err != nil {
 		return fmt.Errorf("failed to copy texture: %v", err)
 	}
+	// DEBUG
+	EngineInstance.GetInstance().GetRenderer().DrawRect(&dst)
 	return nil
 }
 

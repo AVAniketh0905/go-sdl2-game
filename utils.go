@@ -14,8 +14,8 @@ const TIME_OFFSET = 1
 
 // player
 const ATTACK_TIME = 5
-const JUMP_FORCE = 12
-const RUN_FORCE = 1
+const JUMP_FORCE = 20
+const RUN_FORCE = 2
 
 // ui
 const (

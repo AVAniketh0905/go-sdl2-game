@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go-game/phy"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -173,7 +174,7 @@ func (p *Player) Update(dt uint64) {
 
 	p.LastSafePosition.Set(phy.Vector{X: p.GetTransform().X, Y: p.LastSafePosition.Y})
 	p.transform.TranslateX(disp.X)
-	p.collider.Set(int32(p.transform.X), int32(p.transform.Y), 2*TILE_SIZE, 2*TILE_SIZE)
+	p.collider.Set(int32(p.transform.X), int32(p.transform.Y), TILE_SIZE, 2*TILE_SIZE)
 
 	if CollisionHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
 		p.transform.Set(phy.Vector{X: p.LastSafePosition.X, Y: p.transform.Y})
@@ -183,6 +184,7 @@ func (p *Player) Update(dt uint64) {
 	p.transform.TranslateY(disp.Y)
 	p.collider.Set(int32(p.transform.X), int32(p.transform.Y), TILE_SIZE, 2*TILE_SIZE)
 
+	fmt.Println("Player pos: ", p.collider.Get())
 	if CollisionHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
 		p.isGrounded = true
 		p.transform.Set(phy.Vector{X: p.transform.X, Y: p.LastSafePosition.Y})

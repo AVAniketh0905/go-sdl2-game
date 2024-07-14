@@ -54,7 +54,7 @@ func (lm *LevelManager) Init() error {
 	lm.bg = &sdl.Color{R: 0, G: 0, B: 0, A: 255}
 
 	player, err := CreateObjectFactory("Player", &Properties{
-		transform: &phy.Transform{X: 10, Y: 20},
+		transform: &phy.Transform{X: 10, Y: 0},
 		width:     IMG_SIZE,
 		height:    IMG_SIZE,
 		texId:     "player_idle",
@@ -84,11 +84,11 @@ func (lm *LevelManager) GetBgColor() *sdl.Color {
 
 func (lm *LevelManager) Draw() {
 	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
+	CameraInstance.GetInstance().Draw()
 	lm.levelMap.Draw()
 	for _, obj := range lm.gameObjects {
 		obj.Draw()
 	}
-	CameraInstance.GetInstance().Draw()
 }
 
 func (lm *LevelManager) Update(dt uint64) {
