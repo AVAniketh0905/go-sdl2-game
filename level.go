@@ -83,7 +83,7 @@ func (lm *LevelManager) GetBgColor() *sdl.Color {
 }
 
 func (lm *LevelManager) EndLevel() bool {
-	return CameraInstance.GetInstance().GetViewBox().X >= 340
+	return CameraInstance.GetInstance().GetViewBox().X >= 340 || CameraInstance.GetInstance().GetTarget().Y >= 274.85
 }
 
 func (lm *LevelManager) Draw() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects>
-	<object type="Enemy" x="120" y="10" width="64" height="64" texId="boss_load" flip="None" />
-	<object type="Enemy" x="140" y="10" width="64" height="64" texId="boss_load" flip="None" />
+	<object type="Enemy" x="240" y="10" width="64" height="64" texId="boss_load" flip="None" />
+	<object type="Enemy" x="200" y="10" width="64" height="64" texId="boss_load" flip="None" />
 	<object type="Enemy" x="220" y="10" width="64" height="64" texId="boss_load" flip="None" />
 </objects>

@@ -44,6 +44,10 @@ func (c *Camera) GetLevelHeight() int32 {
 	return c.levelHeight
 }
 
+func (c *Camera) GetTarget() *phy.Point {
+	return c.target
+}
+
 func (c *Camera) SetTarget(t *phy.Point) {
 	c.target = t
 }
