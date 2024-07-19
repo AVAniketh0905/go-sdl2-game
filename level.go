@@ -82,6 +82,10 @@ func (lm *LevelManager) GetBgColor() *sdl.Color {
 	return lm.bg
 }
 
+func (lm *LevelManager) EndLevel() bool {
+	return CameraInstance.GetInstance().GetViewBox().X >= 340
+}
+
 func (lm *LevelManager) Draw() {
 	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
 	CameraInstance.GetInstance().Draw()
@@ -97,6 +101,7 @@ func (lm *LevelManager) Update(dt uint64) {
 	for _, obj := range lm.gameObjects {
 		obj.Update(dt)
 	}
+	lm.EndLevel()
 }
 
 func (lm *LevelManager) Destroy() {

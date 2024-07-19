@@ -58,6 +58,12 @@ func (p *PlayState) Events() {
 	}
 }
 
+func (p *PlayState) EndPlay() {
+	if LevelManagerInsatance.GetInstance().EndLevel() {
+		EngineInstance.GetInstance().SetCurrStateName(MENU)
+	}
+}
+
 func (p PlayState) Draw() {
 	p.renderer.SetDrawColor(p.bg.R, p.bg.G, p.bg.B, p.bg.A)
 	p.renderer.Clear()
@@ -74,6 +80,7 @@ func (p PlayState) Update(dt uint64) {
 	for _, mobj := range p.menuObjs {
 		mobj.Update(dt)
 	}
+	p.EndPlay()
 }
 
 func (p PlayState) Exit() {
