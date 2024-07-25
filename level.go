@@ -87,7 +87,7 @@ func (lm *LevelManager) EndLevel() bool {
 }
 
 func (lm *LevelManager) Draw() {
-	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
+	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.9, sdl.FLIP_NONE)
 	CameraInstance.GetInstance().Draw()
 	lm.levelMap.Draw()
 	for _, obj := range lm.gameObjects {

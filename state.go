@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go-game/phy"
+	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -92,12 +93,37 @@ func (p PlayState) Exit() {
 
 type MenuState struct {
 	GameState
-	renderer *sdl.Renderer
+	renderer   *sdl.Renderer
+	staticObjs []Object
 }
 
 func MenuStateInit() (*MenuState, error) {
 	var m MenuState
+
 	m.renderer = EngineInstance.GetInstance().GetRenderer()
+	m.staticObjs = make([]Object, 0)
+
+	playBtn, err := NewButton(&Properties{
+		transform: &phy.Transform{X: 10, Y: 20},
+		width:     128,
+		height:    128,
+		flip:      sdl.FLIP_NONE,
+	}, []string{"default_btn", "hover_btn", "active_btn"}, m.StartGame)
+	if err != nil {
+		return nil, err
+	}
+	m.staticObjs = append(m.staticObjs, playBtn)
+
+	settingsBtn, err := NewButton(&Properties{
+		transform: &phy.Transform{X: 10, Y: 20},
+		width:     128,
+		height:    128,
+		flip:      sdl.FLIP_NONE,
+	}, []string{"default_btn", "hover_btn", "active_btn"}, m.Settings)
+	if err != nil {
+		return nil, err
+	}
+	m.staticObjs = append(m.staticObjs, settingsBtn)
 
 	return &m, nil
 }
@@ -117,9 +143,28 @@ func (m *MenuState) Events() {
 	}
 }
 
+func (m MenuState) drawBg(id string, x, y, width, height int, scaleX, scaleY, scrollRatio float64, flip sdl.RendererFlip) {
+	dst_ := CameraInstance.GetInstance().SyncObject(&phy.Point{X: float64(x), Y: float64(y)}, int(scrollRatio))
+	src := sdl.Rect{X: 0, Y: 0, W: int32(width), H: int32(height)}
+	dst := sdl.Rect{
+		X: int32(dst_.X),
+		Y: int32(dst_.Y),
+		W: int32(float64(width) * scaleX),
+		H: int32(float64(height) * scaleY),
+	}
+
+	textureMap := TextureParserInstance.GetInstance().GetTextureMap()
+	err := m.renderer.CopyEx(textureMap[id], &src, &dst, 0, nil, flip)
+	if err != nil {
+		log.Fatal(err)
+		m.renderer.SetDrawColor(0, 155, 0, 250)
+	}
+}
+
 func (m MenuState) Draw() {
 	m.renderer.SetDrawColor(0, 0, 0, 250)
 	m.renderer.Clear()
+	m.drawBg("menu_bg", 0, 0, WIDTH, HEIGHT, 1.5, 1, 0.5, sdl.FLIP_NONE)
 	m.renderer.Present()
 }
 

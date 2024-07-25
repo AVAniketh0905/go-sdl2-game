@@ -1,5 +1,6 @@
 <textures>
 	<texture id="bg" src="assets/static/bg.png" />
+	<texture id="menu_bg" src="assets/static/bg.png" />
 	<!--  -->
 	<texture id="player_attack" src="assets/player/player_attack.png" />
 	<texture id="player_damage" src="assets/player/player_damage.png" />
@@ -7,7 +8,16 @@
 	<texture id="player_walk" src="assets/player/player_walk.png" />
 	<texture id="player_idle" src="assets/player/player_idle.png" />
 	<!--  -->
+	<!-- home -->
 	<texture id="default_btn" src="assets/ui/default_btn.png" />
 	<texture id="hover_btn" src="assets/ui/hover_btn.png" />
 	<texture id="active_btn" src="assets/ui/active_btn.png" />
+	<!-- play -->
+	<!-- TODO -->
+	<!--
+	<texture id="play_def_btn" src="assets/ui/play_btn.png" />
+	<texture id="play_hov_btn" src="assets/ui/play_btn_hover.png" />
+	<texture id="play_act_btn" src="assets/ui/play_btn_active.png" />
+	-->
+	<!-- settings -->
 </textures>
