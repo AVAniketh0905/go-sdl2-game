@@ -61,7 +61,9 @@ func (p *PlayState) Events() {
 
 func (p *PlayState) EndPlay() {
 	if LevelManagerInsatance.GetInstance().EndLevel() {
+		LevelManagerInsatance.GetInstance().Destroy()
 		EngineInstance.GetInstance().SetCurrStateName(MENU)
+		LevelManagerInsatance.GetInstance().Init()
 	}
 }
 
@@ -164,12 +166,18 @@ func (m MenuState) drawBg(id string, x, y, width, height int, scaleX, scaleY, sc
 func (m MenuState) Draw() {
 	m.renderer.SetDrawColor(0, 0, 0, 250)
 	m.renderer.Clear()
-	m.drawBg("menu_bg", 0, 0, WIDTH, HEIGHT, 1.5, 1, 0.5, sdl.FLIP_NONE)
+	m.drawBg("menu_bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
+	for _, mobj := range m.staticObjs {
+		mobj.Draw()
+	}
 	m.renderer.Present()
 }
 
 func (m MenuState) Update(dt uint64) {
 	m.Events()
+	for _, mobj := range m.staticObjs {
+		mobj.Update(dt)
+	}
 }
 
 func (m MenuState) Exit() {}
