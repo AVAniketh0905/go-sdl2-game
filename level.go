@@ -73,8 +73,8 @@ func (lm *LevelManager) Init() error {
 	lm.gameObjects = append(lm.gameObjects, enemyObjs...)
 
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
-	CameraInstance.GetInstance().SetLevelLimit(WIDTH, HEIGHT)
-	CameraInstance.GetInstance().SetViewBox(0, 0, int32(width), int32(height))
+	CameraInstance.GetInstance().SetLevelLimit(int32(width), int32(height))
+	CameraInstance.GetInstance().SetViewBox(0, 0, WIDTH, HEIGHT)
 	return nil
 }
 
@@ -83,7 +83,7 @@ func (lm *LevelManager) GetBgColor() *sdl.Color {
 }
 
 func (lm *LevelManager) EndLevel() bool {
-	return CameraInstance.GetInstance().GetViewBox().X >= 340 || CameraInstance.GetInstance().GetTarget().Y >= 274.85
+	return CameraInstance.GetInstance().GetTarget().X > 1880 || CameraInstance.GetInstance().GetTarget().Y > 500
 }
 
 func (lm *LevelManager) Draw() {

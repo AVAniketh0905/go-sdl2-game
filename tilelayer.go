@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -107,4 +109,9 @@ func (tl TileLayer) Update(dt uint64) {
 }
 
 func (tl TileLayer) Destroy() {
+}
+
+func (tl TileLayer) String() string {
+	size := fmt.Sprintf("Size: {%d, %d}", len(tl.tileMap), len(tl.tileMap[0]))
+	return fmt.Sprintf("TileLayer{tileSize: %d, rowCount: %d, colCount: %d, tileMap: %v, tileSets: %v}", tl.tileSize, tl.rowCount, tl.colCount, size, tl.tileSets)
 }

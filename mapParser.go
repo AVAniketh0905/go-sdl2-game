@@ -28,9 +28,6 @@ func (mp *MapParser) GetGameMap(id string) *GameMap[TileLayer] {
 }
 
 func (mp *MapParser) Load(id, src string) error {
-	// if err := mp.parse("level1", "assets/maps/ghost_tilemap.tmx"); err != nil {
-	// 	return fmt.Errorf("failed to load level1, %v", err)
-	// }
 	if err := mp.parse(id, src); err != nil {
 		return fmt.Errorf("failed to load, %v from %v, %v", id, src, err)
 	}
