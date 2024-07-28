@@ -60,10 +60,15 @@ func (p *PlayState) Events() {
 }
 
 func (p *PlayState) EndPlay() {
-	if LevelManagerInsatance.GetInstance().EndLevel() {
-		LevelManagerInsatance.GetInstance().Destroy()
-		EngineInstance.GetInstance().SetCurrStateName(MENU)
-		LevelManagerInsatance.GetInstance().Init()
+	switch LevelManagerInsatance.GetInstance().EndLevel() {
+	case SUCCESS:
+		print("Success")
+		// TODO: Add Success Screen
+		EngineInstance.GetInstance().SetCurrStateName(SUCCESS)
+	case FAIL:
+		print("Failure")
+		// TODO: Add Failure Screen
+		EngineInstance.GetInstance().SetCurrStateName(FAIL)
 	}
 }
 
@@ -183,3 +188,57 @@ func (m MenuState) Update(dt uint64) {
 func (m MenuState) Exit() {}
 
 func (m *MenuState) Quit() {}
+
+type SuccessState struct {
+	GameState
+	renderer *sdl.Renderer
+}
+
+func SuccessStateInit() (*SuccessState, error) {
+	s := &SuccessState{}
+	s.renderer = EngineInstance.GetInstance().GetRenderer()
+	return s, nil
+}
+
+func (s SuccessState) Draw() {
+	s.renderer.SetDrawColor(0, 255, 0, 255)
+	s.renderer.Clear()
+	s.renderer.Present()
+}
+
+func (s SuccessState) Update(dt uint64) {
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_M) {
+		LevelManagerInsatance.GetInstance().Destroy()
+		EngineInstance.GetInstance().SetCurrStateName(MENU)
+		LevelManagerInsatance.GetInstance().Init()
+	}
+}
+
+func (s SuccessState) Exit() {}
+
+func (s SuccessState) Quit() {}
+
+type FailureState struct {
+	GameState
+	renderer *sdl.Renderer
+}
+
+func FailureStateInit() (*FailureState, error) {
+	f := &FailureState{}
+	f.renderer = EngineInstance.GetInstance().GetRenderer()
+	return f, nil
+}
+
+func (f FailureState) Draw() {
+	f.renderer.SetDrawColor(255, 0, 0, 255)
+	f.renderer.Clear()
+	f.renderer.Present()
+}
+
+func (f FailureState) Update(dt uint64) {
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_M) {
+		LevelManagerInsatance.GetInstance().Destroy()
+		EngineInstance.GetInstance().SetCurrStateName(MENU)
+		LevelManagerInsatance.GetInstance().Init()
+	}
+}

@@ -12,8 +12,10 @@ import (
 type GStateType string
 
 const (
-	PLAY GStateType = "play"
-	MENU GStateType = "menu"
+	PLAY    GStateType = "play"
+	MENU    GStateType = "menu"
+	SUCCESS GStateType = "success"
+	FAIL    GStateType = "fail"
 )
 
 type Engine struct {
@@ -81,8 +83,20 @@ func (e *Engine) Load() error {
 		return err
 	}
 
+	successState, err := SuccessStateInit()
+	if err != nil {
+		return err
+	}
+
+	failState, err := FailureStateInit()
+	if err != nil {
+		return err
+	}
+
 	e.states["play"] = playState
 	e.states["menu"] = menuState
+	e.states["success"] = successState
+	e.states["fail"] = failState
 
 	e.currStateName = MENU
 	SoundManagerInstance.GetInstance().PlayMusic("eerie")

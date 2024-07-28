@@ -47,6 +47,13 @@ func (ch *CollisionHandler) MapCollision(a *sdl.Rect) bool {
 
 	for i := l; i <= r; i++ {
 		for j := t; j <= b; j++ {
+			if j < 0 || i < 0 {
+				continue
+			}
+			if j >= int32(ch.mapHeight) || i >= int32(ch.mapWidth) {
+				continue
+			}
+
 			if ch.collisionTileSetMap[j][i] != 0 {
 				return true
 			}

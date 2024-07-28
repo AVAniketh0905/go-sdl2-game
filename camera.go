@@ -7,7 +7,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-const CAM_OFFSET = 100
+const CAM_OFFSET = 200
 
 type Camera struct {
 	instance    *Camera
@@ -76,7 +76,7 @@ func (c *Camera) IsInside() bool {
 func (c *Camera) Draw() {
 	r := EngineInstance.GetInstance().GetRenderer()
 	r.SetDrawColor(255, 255, 255, 255)
-	r.DrawRect(&sdl.Rect{X: int32(c.viewBox.X), Y: int32(c.viewBox.Y), W: int32(c.viewBox.X) + c.viewBox.W, H: int32(c.viewBox.Y) + c.viewBox.H})
+	r.DrawRect(&sdl.Rect{X: 0, Y: 0, W: c.viewBox.W, H: c.viewBox.H})
 	r.SetDrawColor(0, 0, 0, 255)
 }
 
@@ -85,7 +85,7 @@ func (c *Camera) Update(dt uint64) error {
 		return fmt.Errorf("target does not exist")
 	}
 
-	offSetX := c.viewBox.W/2 + CAM_OFFSET
+	offSetX := c.viewBox.W / 2
 	offSetY := c.viewBox.H/2 + CAM_OFFSET
 
 	c.viewBox.X = Limit(0, int32(c.target.X)-offSetX, c.viewBox.W)

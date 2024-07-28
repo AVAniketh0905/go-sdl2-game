@@ -82,25 +82,31 @@ func (lm *LevelManager) GetBgColor() *sdl.Color {
 	return lm.bg
 }
 
-func (lm *LevelManager) EndLevel() bool {
-	return CameraInstance.GetInstance().GetTarget().X > 1880 || CameraInstance.GetInstance().GetTarget().Y > 500
+func (lm *LevelManager) EndLevel() GStateType {
+	if CameraInstance.GetInstance().GetTarget().X > 1880 {
+		return SUCCESS
+	} else if CameraInstance.GetInstance().GetTarget().Y > 500 {
+		return FAIL
+	}
+
+	return PLAY
 }
 
 func (lm *LevelManager) Draw() {
 	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.9, sdl.FLIP_NONE)
-	CameraInstance.GetInstance().Draw()
 	lm.levelMap.Draw()
 	for _, obj := range lm.gameObjects {
 		obj.Draw()
 	}
+	CameraInstance.GetInstance().Draw()
 }
 
 func (lm *LevelManager) Update(dt uint64) {
-	CameraInstance.GetInstance().Update(dt)
 	lm.levelMap.Update(dt)
 	for _, obj := range lm.gameObjects {
 		obj.Update(dt)
 	}
+	CameraInstance.GetInstance().Update(dt)
 	lm.EndLevel()
 }
 
