@@ -13,6 +13,8 @@ const TIME_DELAY = 2
 const TIME_OFFSET = 1
 
 // player
+const MAX_HEALTH = 100
+const FIXED_HEALTH_DMG = 1
 const ATTACK_TIME = 5
 const JUMP_FORCE = 20
 const RUN_FORCE = 2

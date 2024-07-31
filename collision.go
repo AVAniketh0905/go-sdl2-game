@@ -10,9 +10,10 @@ type CollisionHandler struct {
 	collisionTileSetMap TileSetMap
 	collisionLayer      TileLayer
 
-	tileSize  int
-	mapWidth  int
-	mapHeight int
+	tileSize   int
+	tileOffset int
+	mapWidth   int
+	mapHeight  int
 }
 
 func (ch *CollisionHandler) GetInstance() *CollisionHandler {
@@ -28,7 +29,7 @@ func (ch *CollisionHandler) GetInstance() *CollisionHandler {
 
 func (ch *CollisionHandler) SetCollisionMap(tileMap TileSetMap, tileSize int) {
 	ch.collisionTileSetMap = tileMap
-	ch.tileSize = tileSize
+	ch.tileSize = tileSize + ch.tileOffset
 	ch.mapHeight = len(tileMap)
 	ch.mapWidth = len(tileMap[0])
 }
@@ -61,4 +62,20 @@ func (ch *CollisionHandler) MapCollision(a *sdl.Rect) bool {
 	}
 
 	return false
+}
+
+type DamageHandler struct {
+	instance *DamageHandler
+
+	CollisionHandler
+}
+
+func (dh *DamageHandler) GetInstance() *DamageHandler {
+	if dh.instance == nil {
+		dh.instance = &DamageHandler{}
+	}
+
+	dh.tileOffset = 2
+
+	return dh.instance
 }

@@ -60,7 +60,7 @@ func (p *PlayState) Events() {
 }
 
 func (p *PlayState) EndPlay() {
-	switch LevelManagerInsatance.GetInstance().EndLevel() {
+	switch LevelManagerInsatance.GetInstance().GetState() {
 	case SUCCESS:
 		print("Success")
 		// TODO: Add Success Screen

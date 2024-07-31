@@ -22,6 +22,10 @@ func (t *Time) GetDeltaTime() uint64 {
 	return t.deltaTime
 }
 
+func (t *Time) Start() {
+	t.lastTime = sdl.GetTicks64()
+}
+
 func (t *Time) Tick() {
 	currentTime := sdl.GetTicks64()
 	t.deltaTime = (currentTime - t.lastTime)
@@ -29,6 +33,4 @@ func (t *Time) Tick() {
 	if t.deltaTime > TIME_DELAY {
 		t.deltaTime = TIME_DELAY
 	}
-
-	t.lastTime = sdl.GetTicks64()
 }

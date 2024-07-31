@@ -11,6 +11,7 @@ type LevelManager struct {
 	instance *LevelManager
 
 	bg          *sdl.Color
+	state       GStateType
 	levelMap    *GameMap[TileLayer]
 	gameObjects []Object
 }
@@ -46,10 +47,15 @@ func (lm *LevelManager) Init() error {
 		return fmt.Errorf("failed to load game objects, %x", err)
 	}
 	lvlLayers := lm.levelMap.GetLayers()
-	tileSize := lvlLayers[0].tileSize
-	width, height := lvlLayers[0].GetWidth()*tileSize, lvlLayers[0].GetHeight()*tileSize
 
-	CollisionHandlerInstance.GetInstance().SetCollisionMap(lvlLayers[0].tileMap, lvlLayers[0].tileSize)
+	blockTiles := lvlLayers[0] // block layer
+	tileSize := blockTiles.tileSize
+	width, height := blockTiles.GetWidth()*tileSize, blockTiles.GetHeight()*tileSize
+
+	CollisionHandlerInstance.GetInstance().SetCollisionMap(blockTiles.tileMap, blockTiles.tileSize)
+
+	damageTiles := lvlLayers[1] // damage layer
+	DamageHandlerInstance.GetInstance().SetCollisionMap(damageTiles.tileMap, damageTiles.tileSize)
 
 	lm.bg = &sdl.Color{R: 0, G: 0, B: 0, A: 255}
 
@@ -82,14 +88,19 @@ func (lm *LevelManager) GetBgColor() *sdl.Color {
 	return lm.bg
 }
 
-func (lm *LevelManager) EndLevel() GStateType {
-	if CameraInstance.GetInstance().GetTarget().X > 1880 {
-		return SUCCESS
-	} else if CameraInstance.GetInstance().GetTarget().Y > 500 {
-		return FAIL
-	}
+func (lm *LevelManager) GetState() GStateType {
+	return lm.state
+}
 
-	return PLAY
+func (lm *LevelManager) SetState(state GStateType) {
+	switch state {
+	case PLAY:
+		lm.state = PLAY
+	case SUCCESS:
+		lm.state = SUCCESS
+	case FAIL:
+		lm.state = FAIL
+	}
 }
 
 func (lm *LevelManager) Draw() {
@@ -101,13 +112,25 @@ func (lm *LevelManager) Draw() {
 	CameraInstance.GetInstance().Draw()
 }
 
+func (lm *LevelManager) ApplyState() {
+	if CameraInstance.GetInstance().GetTarget().X > 1880 {
+		lm.SetState(SUCCESS)
+	} else if CameraInstance.GetInstance().GetTarget().Y > 500 {
+		lm.SetState(FAIL)
+	} else {
+		lm.SetState(PLAY)
+	}
+}
+
 func (lm *LevelManager) Update(dt uint64) {
 	lm.levelMap.Update(dt)
 	for _, obj := range lm.gameObjects {
 		obj.Update(dt)
 	}
 	CameraInstance.GetInstance().Update(dt)
-	lm.EndLevel()
+	if lm.GetState() != FAIL {
+		lm.ApplyState()
+	}
 }
 
 func (lm *LevelManager) Destroy() {

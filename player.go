@@ -41,6 +41,7 @@ type Player struct {
 
 	collider *phy.Collider
 
+	Health           int
 	LastSafePosition *phy.Vector
 }
 
@@ -56,6 +57,7 @@ func NewPlayer(props *Properties) *Player {
 		canJump:          true,
 		jumpForce:        JUMP_FORCE,
 		attackTime:       ATTACK_TIME,
+		Health:           MAX_HEALTH,
 		LastSafePosition: &phy.Vector{},
 	}
 }
@@ -80,6 +82,7 @@ func (p *Player) animationState() {
 	case ATTACK:
 		p.anim.SetProps("player_attack", 0, 4, 50)
 	case DAMAGE:
+		p.anim.SetProps("player_death", 0, 4, 150)
 	case DEATH:
 	}
 }
@@ -179,6 +182,12 @@ func (p *Player) Update(dt uint64) {
 		p.transform.Set(phy.Vector{X: p.LastSafePosition.X, Y: p.transform.Y})
 	}
 
+	if DamageHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
+		p.Health -= FIXED_HEALTH_DMG
+		p.state = DAMAGE
+		p.transform.Set(phy.Vector{X: p.LastSafePosition.X - 10, Y: p.transform.Y})
+	}
+
 	p.LastSafePosition.Set(phy.Vector{X: p.LastSafePosition.X, Y: p.GetTransform().Y})
 	p.transform.TranslateY(disp.Y)
 	p.collider.Set(int32(p.transform.X), int32(p.transform.Y), TILE_SIZE, 2*TILE_SIZE)
@@ -190,16 +199,31 @@ func (p *Player) Update(dt uint64) {
 		p.isGrounded = false
 	}
 
+	if DamageHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
+		p.Health -= FIXED_HEALTH_DMG
+		p.state = DAMAGE
+		p.transform.Set(phy.Vector{X: p.transform.X - 10, Y: p.LastSafePosition.Y - 10})
+	}
+
 	p.LastSafePosition.Set(phy.Vector{X: p.GetTransform().X, Y: p.LastSafePosition.Y})
 	if p.state == CROUCH {
 		p.collider.Set(int32(p.transform.X), int32(p.transform.Y)+TILE_SIZE/2, TILE_SIZE, 2*TILE_SIZE)
 		if CollisionHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
 			p.transform.Set(phy.Vector{X: p.transform.X, Y: p.LastSafePosition.Y})
 		}
+
+		if DamageHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
+			p.Health -= FIXED_HEALTH_DMG
+			p.transform.Set(phy.Vector{X: p.transform.X, Y: p.LastSafePosition.Y})
+		}
 	}
 
 	p.updateOrigin()
 	p.anim.Update(dt)
+
+	if p.Health <= 0 {
+		LevelManagerInsatance.GetInstance().SetState(FAIL)
+	}
 }
 
 func (p Player) Destroy() {
