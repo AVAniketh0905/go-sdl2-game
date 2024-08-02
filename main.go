@@ -16,6 +16,7 @@ var LevelManagerInsatance *LevelManager = &LevelManager{}
 
 var CollisionHandlerInstance *CollisionHandler = &CollisionHandler{}
 var DamageHandlerInstance *DamageHandler = &DamageHandler{}
+var CoinHandlerInstance *CoinHandler = &CoinHandler{}
 
 var TextureParserInstance *TextureParser = &TextureParser{}
 var MapParserInstance *MapParser = &MapParser{}

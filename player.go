@@ -42,6 +42,7 @@ type Player struct {
 	collider *phy.Collider
 
 	Health           int
+	Coins            int
 	LastSafePosition *phy.Vector
 }
 
@@ -216,6 +217,10 @@ func (p *Player) Update(dt uint64) {
 			p.Health -= FIXED_HEALTH_DMG
 			p.transform.Set(phy.Vector{X: p.transform.X, Y: p.LastSafePosition.Y})
 		}
+	}
+
+	if CoinHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
+		p.Coins++
 	}
 
 	p.updateOrigin()

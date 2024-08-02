@@ -48,6 +48,8 @@ func (lm *LevelManager) Init() error {
 	}
 	lvlLayers := lm.levelMap.GetLayers()
 
+	lm.state = PLAY
+
 	blockTiles := lvlLayers[0] // block layer
 	tileSize := blockTiles.tileSize
 	width, height := blockTiles.GetWidth()*tileSize, blockTiles.GetHeight()*tileSize
@@ -56,6 +58,9 @@ func (lm *LevelManager) Init() error {
 
 	damageTiles := lvlLayers[1] // damage layer
 	DamageHandlerInstance.GetInstance().SetCollisionMap(damageTiles.tileMap, damageTiles.tileSize)
+
+	coinTiles := lvlLayers[2] // coin layer
+	CoinHandlerInstance.GetInstance().SetCollisionMap(coinTiles.tileMap, coinTiles.tileSize)
 
 	lm.bg = &sdl.Color{R: 0, G: 0, B: 0, A: 255}
 
@@ -137,6 +142,7 @@ func (lm *LevelManager) Destroy() {
 	for _, obj := range lm.gameObjects {
 		obj.Destroy()
 	}
+	lm.gameObjects = nil
 	lm.levelMap = nil
 	lm.instance = nil
 }

@@ -79,3 +79,41 @@ func (dh *DamageHandler) GetInstance() *DamageHandler {
 
 	return dh.instance
 }
+
+type CoinHandler struct {
+	instance *CoinHandler
+
+	CollisionHandler
+}
+
+func (ch *CoinHandler) GetInstance() *CoinHandler {
+	if ch.instance == nil {
+		ch.instance = &CoinHandler{}
+	}
+	return ch.instance
+}
+
+func (ch *CoinHandler) MapCollision(a *sdl.Rect) bool {
+	l, r := a.X/int32(ch.tileSize), (a.X+a.W)/int32(ch.tileSize)
+	t, b := a.Y/int32(ch.tileSize), (a.Y+a.H)/int32(ch.tileSize)
+	l, r = max(l, 0), min(r, int32(ch.mapWidth))
+	t, b = max(t, 0), min(b, int32(ch.mapHeight))
+
+	for i := l; i <= r; i++ {
+		for j := t; j <= b; j++ {
+			if j < 0 || i < 0 {
+				continue
+			}
+			if j >= int32(ch.mapHeight) || i >= int32(ch.mapWidth) {
+				continue
+			}
+
+			if ch.collisionTileSetMap[j][i] != 0 {
+				ch.collisionTileSetMap[j][i] = 0
+				return true
+			}
+		}
+	}
+
+	return false
+}
