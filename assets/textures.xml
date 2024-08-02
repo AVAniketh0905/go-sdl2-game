@@ -9,12 +9,15 @@
 	<texture id="player_idle" src="assets/player/player_idle.png" />
 	<!--  -->
 	<!-- home -->
-	<texture id="default_btn" src="assets/ui/default_btn.png" />
-	<texture id="hover_btn" src="assets/ui/hover_btn.png" />
-	<texture id="active_btn" src="assets/ui/active_btn.png" />
+	<texture id="default_btn" src="assets/ui/btns/default_btn.png" />
+	<texture id="hover_btn" src="assets/ui/btns/hover_btn.png" />
+	<texture id="active_btn" src="assets/ui/btns/active_btn.png" />
 	<!-- play -->
-	<texture id="play_def_btn" src="assets/ui/default_play_btn.png" />
-	<texture id="play_hov_btn" src="assets/ui/hover_play_btn.png" />
-	<texture id="play_act_btn" src="assets/ui/active_play_btn.png" />
-	<!-- settings -->
+	<texture id="play_def_btn" src="assets/ui/btns/default_play_btn.png" />
+	<texture id="play_hov_btn" src="assets/ui/btns/hover_play_btn.png" />
+	<texture id="play_act_btn" src="assets/ui/btns/active_play_btn.png" />
+	<!-- health bars -->
+	<texture id="health_bar" src="assets/ui/health_bars_base.png" />
+	<texture id="health_bar_fill" src="assets/ui/health_bars_fill.png" />
+	<texture id="health_bar_extra" src="assets/ui/health_bars_extra.png" />
 </textures>
