@@ -13,6 +13,7 @@ type LevelManager struct {
 	bg          *sdl.Color
 	state       GStateType
 	levelMap    *GameMap[TileLayer]
+	healthBar   *Bars
 	gameObjects []Object
 }
 
@@ -80,7 +81,20 @@ func (lm *LevelManager) Init() error {
 		return err
 	}
 
+	healthBar, err := NewBars(&Properties{
+		transform: &phy.Transform{X: 80, Y: 20},
+		width:     64,
+		height:    16,
+		texId:     "",
+		flip:      sdl.FLIP_NONE,
+	}, []string{"health_bar", "health_bar_fill"})
+	if err != nil {
+		return err
+	}
+	lm.healthBar = healthBar
+
 	lm.gameObjects = append(lm.gameObjects, player)
+	lm.gameObjects = append(lm.gameObjects, healthBar)
 	lm.gameObjects = append(lm.gameObjects, enemyObjs...)
 
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
@@ -106,6 +120,10 @@ func (lm *LevelManager) SetState(state GStateType) {
 	case FAIL:
 		lm.state = FAIL
 	}
+}
+
+func (lm *LevelManager) UpdateHealthBar(newHealth int) {
+	lm.healthBar.SetBarWidth((lm.healthBar.width * (newHealth) / (MAX_HEALTH)))
 }
 
 func (lm *LevelManager) Draw() {

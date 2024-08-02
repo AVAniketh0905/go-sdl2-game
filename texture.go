@@ -36,6 +36,24 @@ func (tm *TextureManager) Draw(id string, x, y, width, height int, scaleX, scale
 	return nil
 }
 
+func (tm *TextureManager) CustomDraw(id string, x, y, width, height int, scaleX, scaleY, scrollRatio float64, flip sdl.RendererFlip, offset int32) error {
+	dst_ := CameraInstance.GetInstance().SyncObject(&phy.Point{X: float64(x), Y: float64(y)}, int(scrollRatio))
+	src := sdl.Rect{X: 0, Y: 0, W: int32(width), H: int32(height)}
+	dst := sdl.Rect{
+		X: int32(dst_.X),
+		Y: int32(dst_.Y),
+		W: int32(float64(width) * scaleX),
+		H: int32(float64(height) * scaleY),
+	}
+
+	textureMap := TextureParserInstance.GetInstance().GetTextureMap()
+	err := EngineInstance.GetInstance().GetRenderer().CopyEx(textureMap[id], &src, &dst, 0, nil, flip)
+	if err != nil {
+		return fmt.Errorf("failed to copy texture: %v", err)
+	}
+	return nil
+}
+
 func (tm *TextureManager) DrawFrame(id string, x int, y int, width int, height int, currentRow int, currentFrame int, flip sdl.RendererFlip) error {
 	cam := CameraInstance.GetInstance().GetViewBox()
 

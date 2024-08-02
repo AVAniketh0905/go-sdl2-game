@@ -165,7 +165,11 @@ func (p *Player) AttackControls(dt uint64) {
 }
 
 func (p *Player) Update(dt uint64) {
-	p.state = IDLE
+	if p.Health > MAX_HEALTH*0.25 {
+		p.state = IDLE
+	} else {
+		p.state = DAMAGE
+	}
 	p.rb.UnsetForces()
 
 	p.Controls(dt)
@@ -225,6 +229,8 @@ func (p *Player) Update(dt uint64) {
 
 	p.updateOrigin()
 	p.anim.Update(dt)
+
+	LevelManagerInsatance.GetInstance().UpdateHealthBar(p.Health)
 
 	if p.Health <= 0 {
 		LevelManagerInsatance.GetInstance().SetState(FAIL)
