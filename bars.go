@@ -31,11 +31,11 @@ func (b *Bars) SetBarWidth(w int) {
 func (b *Bars) Draw() {
 	// Draw base
 	base := b.texIds[0]
-	TextureManagerInstance.GetInstance().Draw(base, int(b.transform.X), int(b.transform.Y), b.width, b.height, 4, 4, 0, b.flip)
+	TextureManagerInstance.GetInstance().Draw(base, int(b.transform.X), int(b.transform.Y), b.width, b.height, 4, 4, 0, b.flip, false)
 
 	// // Draw bar
 	bar := b.texIds[1]
-	TextureManagerInstance.GetInstance().Draw(bar, int(b.transform.X), int(b.transform.Y), b.barWidth, b.height, 4, 4, 0, b.flip)
+	TextureManagerInstance.GetInstance().Draw(bar, int(b.transform.X), int(b.transform.Y), b.barWidth, b.height, 4, 4, 0, b.flip, false)
 }
 
 func (b *Bars) Update(dt uint64) {

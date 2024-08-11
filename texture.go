@@ -18,7 +18,7 @@ func (tm *TextureManager) GetInstance() *TextureManager {
 	return tm.instance
 }
 
-func (tm *TextureManager) Draw(id string, x, y, width, height int, scaleX, scaleY, scrollRatio float64, flip sdl.RendererFlip) error {
+func (tm *TextureManager) Draw(id string, x, y, width, height int, scaleX, scaleY, scrollRatio float64, flip sdl.RendererFlip, drawBorder bool) error {
 	dst_ := CameraInstance.GetInstance().SyncObject(&phy.Point{X: float64(x), Y: float64(y)}, int(scrollRatio))
 	src := sdl.Rect{X: 0, Y: 0, W: int32(width), H: int32(height)}
 	dst := sdl.Rect{
@@ -32,6 +32,19 @@ func (tm *TextureManager) Draw(id string, x, y, width, height int, scaleX, scale
 	err := EngineInstance.GetInstance().GetRenderer().CopyEx(textureMap[id], &src, &dst, 0, nil, flip)
 	if err != nil {
 		return fmt.Errorf("failed to copy texture: %v", err)
+	}
+
+	if drawBorder {
+		border := sdl.Rect{
+			X: dst.X - 10,
+			Y: dst.Y,
+			W: dst.W + 20,
+			H: dst.H,
+		}
+
+		EngineInstance.GetInstance().GetRenderer().SetDrawColor(255, 255, 255, 255)
+		EngineInstance.GetInstance().GetRenderer().DrawRect(&border)
+		EngineInstance.GetInstance().GetRenderer().SetDrawColor(0, 0, 0, 255)
 	}
 	return nil
 }

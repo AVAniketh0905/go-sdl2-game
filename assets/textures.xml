@@ -1,6 +1,7 @@
 <textures>
 	<texture id="bg" src="assets/static/bg.png" />
 	<texture id="menu_bg" src="assets/static/bg.png" />
+	<texture id="controls" src="assets/static/controls.png" />
 	<!--  -->
 	<texture id="player_attack" src="assets/player/player_attack.png" />
 	<texture id="player_damage" src="assets/player/player_damage.png" />

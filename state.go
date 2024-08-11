@@ -117,8 +117,13 @@ func MenuStateInit() (*MenuState, error) {
 		return nil, err
 	}
 
+	controlsText, err := NewText(16, "assets/fonts/Array-Regular.ttf", sdl.Color{R: 255, G: 255, B: 255, A: 255}, "Controls", WIDTH/2-30, HEIGHT/2+100, 100, 50)
+	if err != nil {
+		return nil, err
+	}
+
 	m.staticObjs = append(m.staticObjs, playBtn)
-	m.texts = append(m.texts, welcomeText)
+	m.texts = append(m.texts, welcomeText, controlsText)
 
 	// settingsBtn, err := NewButton(&Properties{
 	// 	transform: &phy.Transform{X: 10, Y: 20},
@@ -152,7 +157,8 @@ func (m *MenuState) Events() {
 func (m MenuState) Draw() {
 	EngineInstance.GetInstance().GetRenderer().SetDrawColor(0, 0, 0, 255)
 	EngineInstance.GetInstance().GetRenderer().Clear()
-	TextureManagerInstance.GetInstance().Draw("menu_bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
+	TextureManagerInstance.GetInstance().Draw("menu_bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE, false)
+	TextureManagerInstance.GetInstance().Draw("controls", WIDTH/2-75, HEIGHT/2+140, 128, 128, 1, 1, 0, sdl.FLIP_NONE, false)
 	for _, text := range m.texts {
 		text.Draw()
 	}

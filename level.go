@@ -127,7 +127,7 @@ func (lm *LevelManager) UpdateHealthBar(newHealth int) {
 }
 
 func (lm *LevelManager) Draw() {
-	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.9, sdl.FLIP_NONE)
+	TextureManagerInstance.GetInstance().Draw("bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.9, sdl.FLIP_NONE, false)
 	lm.levelMap.Draw()
 	for _, obj := range lm.gameObjects {
 		obj.Draw()

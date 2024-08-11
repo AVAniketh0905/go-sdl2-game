@@ -170,7 +170,7 @@ func (sqa *SeqAnimation) parse(path string) error {
 
 func (sqa *SeqAnimation) Draw(x, y int, scaleX, scaleY float64, flip sdl.RendererFlip) error {
 	texId := sqa.currSeq.TextureIds[sqa.currFrame]
-	err := TextureManagerInstance.GetInstance().Draw(texId, x, y, sqa.currSeq.Width, sqa.currSeq.Height, scaleX, scaleY, 1, flip)
+	err := TextureManagerInstance.GetInstance().Draw(texId, x, y, sqa.currSeq.Width, sqa.currSeq.Height, scaleX, scaleY, 1, flip, false)
 	if err != nil {
 		return fmt.Errorf("failed to draw the current frame %v, %v", texId, err)
 	}
