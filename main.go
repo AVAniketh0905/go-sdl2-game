@@ -28,12 +28,7 @@ func Core() {
 	if err != nil {
 		log.Fatalf("Failed to load EngineInstance: %v", err)
 	}
-	defer EngineInstance.GetInstance().Destroy()
-	defer TextureManagerInstance.GetInstance().Destroy()
-	defer TextureParserInstance.GetInstance().Destroy()
-	defer MapParserInstance.GetInstance().Destroy()
-	defer ObjectParserInstance.GetInstance().Destroy()
-	defer SoundParserInstance.GetInstance().Destroy()
+	defer Destroy()
 
 	for EngineInstance.GetInstance().IsRunning {
 		TimeInstance.GetInstance().Start()
@@ -45,6 +40,17 @@ func Core() {
 
 		TimeInstance.GetInstance().Tick()
 	}
+}
+
+func Destroy() {
+	EngineInstance.GetInstance().Destroy()
+	TextureManagerInstance.GetInstance().Destroy()
+	TextureParserInstance.GetInstance().Destroy()
+	MapParserInstance.GetInstance().Destroy()
+	ObjectParserInstance.GetInstance().Destroy()
+	SoundParserInstance.GetInstance().Destroy()
+	SoundManagerInstance.GetInstance().Destroy()
+	LevelManagerInsatance.GetInstance().Destroy()
 }
 
 func main() {

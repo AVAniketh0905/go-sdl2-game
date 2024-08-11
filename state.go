@@ -59,12 +59,8 @@ func (p *PlayState) Events() {
 func (p *PlayState) EndPlay() {
 	switch LevelManagerInsatance.GetInstance().GetState() {
 	case SUCCESS:
-		print("Success")
-		// TODO: Add Success Screen
 		EngineInstance.GetInstance().SetCurrStateName(SUCCESS)
 	case FAIL:
-		print("Failure")
-		// TODO: Add Failure Screen
 		EngineInstance.GetInstance().SetCurrStateName(FAIL)
 	}
 }
@@ -98,6 +94,7 @@ func (p PlayState) Exit() {
 type MenuState struct {
 	GameState
 	staticObjs []Object
+	texts      []*Text
 }
 
 func MenuStateInit() (*MenuState, error) {
@@ -114,7 +111,14 @@ func MenuStateInit() (*MenuState, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	welcomeText, err := NewText(32, "assets/fonts/test.ttf", sdl.Color{R: 255, G: 255, B: 255, A: 255}, "Welcome to the game!", WIDTH/2-50, HEIGHT/2-100, 400, 100)
+	if err != nil {
+		return nil, err
+	}
+
 	m.staticObjs = append(m.staticObjs, playBtn)
+	m.texts = append(m.texts, welcomeText)
 
 	// settingsBtn, err := NewButton(&Properties{
 	// 	transform: &phy.Transform{X: 10, Y: 20},
@@ -149,6 +153,9 @@ func (m MenuState) Draw() {
 	EngineInstance.GetInstance().GetRenderer().SetDrawColor(0, 0, 0, 255)
 	EngineInstance.GetInstance().GetRenderer().Clear()
 	TextureManagerInstance.GetInstance().Draw("menu_bg", 0, 0, WIDTH, HEIGHT, 1, 1, 0.5, sdl.FLIP_NONE)
+	for _, text := range m.texts {
+		text.Draw()
+	}
 	for _, mobj := range m.staticObjs {
 		mobj.Draw()
 	}
@@ -168,7 +175,8 @@ func (m *MenuState) Quit() {}
 
 type SuccessState struct {
 	MenuState
-	objs []Object
+	objs  []Object
+	texts []*Text
 }
 
 func SuccessStateInit() (*SuccessState, error) {
@@ -184,7 +192,13 @@ func SuccessStateInit() (*SuccessState, error) {
 		return nil, err
 	}
 
+	completedText, err := NewText(32, "assets/fonts/test.ttf", sdl.Color{R: 0, B: 0, G: 0, A: 255}, "Level Completed", WIDTH/2-50, HEIGHT/2-100, 400, 100)
+	if err != nil {
+		return nil, err
+	}
+
 	s.objs = append(s.objs, homeBtn)
+	s.texts = append(s.texts, completedText)
 	return s, nil
 }
 
@@ -197,6 +211,9 @@ func (s *SuccessState) GoHome() {
 func (s SuccessState) Draw() {
 	EngineInstance.GetInstance().GetRenderer().SetDrawColor(0, 255, 0, 255)
 	EngineInstance.GetInstance().GetRenderer().Clear()
+	for _, text := range s.texts {
+		text.Draw()
+	}
 	for _, obj := range s.objs {
 		obj.Draw()
 	}
@@ -223,7 +240,8 @@ func (s SuccessState) Quit() {}
 type FailureState struct {
 	MenuState
 
-	objs []Object
+	objs  []Object
+	texts []*Text
 }
 
 func FailureStateInit() (*FailureState, error) {
@@ -239,7 +257,13 @@ func FailureStateInit() (*FailureState, error) {
 		return nil, err
 	}
 
+	failureText, err := NewText(32, "assets/fonts/test.ttf", sdl.Color{R: 255, G: 255, B: 255, A: 255}, "Level Failed", WIDTH/2-100, HEIGHT/2-100, 400, 100)
+	if err != nil {
+		return nil, err
+	}
+
 	f.objs = append(f.objs, homeBtn)
+	f.texts = append(f.texts, failureText)
 
 	return f, nil
 }
@@ -253,6 +277,9 @@ func (f *FailureState) GoHome() {
 func (f FailureState) Draw() {
 	EngineInstance.GetInstance().GetRenderer().SetDrawColor(255, 0, 0, 255)
 	EngineInstance.GetInstance().GetRenderer().Clear()
+	for _, text := range f.texts {
+		text.Draw()
+	}
 	for _, obj := range f.objs {
 		obj.Draw()
 	}
