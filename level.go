@@ -137,8 +137,10 @@ func (lm *LevelManager) Draw() {
 
 func (lm *LevelManager) ApplyState() {
 	if CameraInstance.GetInstance().GetTarget().X > 1880 {
+		SoundManagerInstance.GetInstance().PlayEffect("success")
 		lm.SetState(SUCCESS)
 	} else if CameraInstance.GetInstance().GetTarget().Y > 500 {
+		SoundManagerInstance.GetInstance().PlayEffect("fail")
 		lm.SetState(FAIL)
 	} else {
 		lm.SetState(PLAY)

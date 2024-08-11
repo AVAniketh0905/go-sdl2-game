@@ -191,6 +191,7 @@ func (p *Player) Update(dt uint64) {
 		p.Health -= FIXED_HEALTH_DMG
 		p.state = DAMAGE
 		p.transform.Set(phy.Vector{X: p.LastSafePosition.X - 10, Y: p.transform.Y})
+		SoundManagerInstance.GetInstance().PlayEffect("damage")
 	}
 
 	p.LastSafePosition.Set(phy.Vector{X: p.LastSafePosition.X, Y: p.GetTransform().Y})
@@ -208,6 +209,7 @@ func (p *Player) Update(dt uint64) {
 		p.Health -= FIXED_HEALTH_DMG
 		p.state = DAMAGE
 		p.transform.Set(phy.Vector{X: p.transform.X - 10, Y: p.LastSafePosition.Y - 10})
+		SoundManagerInstance.GetInstance().PlayEffect("damage")
 	}
 
 	p.LastSafePosition.Set(phy.Vector{X: p.GetTransform().X, Y: p.LastSafePosition.Y})
@@ -220,11 +222,13 @@ func (p *Player) Update(dt uint64) {
 		if DamageHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
 			p.Health -= FIXED_HEALTH_DMG
 			p.transform.Set(phy.Vector{X: p.transform.X, Y: p.LastSafePosition.Y})
+			SoundManagerInstance.GetInstance().PlayEffect("damage")
 		}
 	}
 
 	if CoinHandlerInstance.GetInstance().MapCollision(p.collider.Get()) {
 		p.Coins++
+		SoundManagerInstance.GetInstance().PlayEffect("coin")
 	}
 
 	p.updateOrigin()
@@ -234,6 +238,7 @@ func (p *Player) Update(dt uint64) {
 
 	if p.Health <= 0 {
 		LevelManagerInsatance.GetInstance().SetState(FAIL)
+		SoundManagerInstance.GetInstance().PlayEffect("damage")
 	}
 }
 

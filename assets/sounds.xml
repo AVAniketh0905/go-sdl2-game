@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sounds>
-	<!-- <effect id="jump" src="assets/music/jump.ogg" /> -->
+	<effect id="damage" src="assets/music/damage.ogg" />
+	<effect id="coin" src="assets/music/coin.ogg" />
+	<effect id="success" src="assets/music/success.ogg" />
+	<effect id="fail" src="assets/music/fail.ogg" />
 	<music id="eerie" src="assets/music/dark-ambient.ogg" />
 </sounds>
