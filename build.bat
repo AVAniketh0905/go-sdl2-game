@@ -4,7 +4,7 @@ setlocal
 REM Configuration
 set "sdl_libs_path=C:\mingw64\bin"
 set "outputdir=.\builds"
-set "name_of_game=YourGameName"
+set "name_of_game=Gome"
 set "info=false"
 
 REM Check for the -i flag
