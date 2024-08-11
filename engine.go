@@ -17,9 +17,6 @@ const (
 	MENU    GStateType = "menu"
 	SUCCESS GStateType = "success"
 	FAIL    GStateType = "fail"
-
-	fontPath = "assets/fonts/test.ttf"
-	fontSize = 24
 )
 
 type Engine struct {
@@ -31,8 +28,6 @@ type Engine struct {
 	states     map[GStateType]GameState
 
 	currStateName GStateType
-
-	textTex *sdl.Texture
 
 	IsRunning bool
 }
@@ -69,18 +64,6 @@ func EngineInit() (*Engine, error) {
 		return nil, fmt.Errorf("failed to create renderer: %v", err)
 	}
 
-	var font *ttf.Font
-	if font, err = ttf.OpenFont(fontPath, fontSize); err != nil {
-		return nil, fmt.Errorf("failed to open font: %v", err)
-	}
-	defer font.Close()
-
-	var text *sdl.Surface
-	if text, err = font.RenderUTF8Blended("Hello, World!", sdl.Color{R: 255, G: 0, B: 0, A: 255}); err != nil {
-		return nil, fmt.Errorf("failed to render text: %v", err)
-	}
-	defer text.Free()
-
 	var DM sdl.DisplayMode
 
 	e.window = window
@@ -88,10 +71,6 @@ func EngineInit() (*Engine, error) {
 	DM, err = sdl.GetCurrentDisplayMode(0)
 	if err != nil {
 		return nil, err
-	}
-	e.textTex, err = e.renderer.CreateTextureFromSurface(text)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create text texture: %v", err)
 	}
 	e.screenSize = &sdl.Rect{X: 0, Y: 0, W: DM.W, H: DM.H}
 	e.states = map[GStateType]GameState{}
@@ -171,7 +150,6 @@ func (e *Engine) SetCurrStateName(stateName GStateType) {
 func (e *Engine) Update(dt uint64) {
 	state := e.GetCurrState()
 	state.Update(dt)
-	e.renderer.CopyEx(e.textTex, nil, e.screenSize, 0, nil, sdl.FLIP_NONE)
 }
 
 func (e *Engine) Events() {

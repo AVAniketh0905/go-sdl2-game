@@ -23,16 +23,24 @@ func NewButton(props *Properties, texIds []string, callback func()) (*Button, er
 		return nil, fmt.Errorf("please provide atleast 3 textures for btn, provided only %v", len(texIds))
 	}
 
-	return &Button{
+	b := &Button{
 		mode:       DEFAULT_BTN,
 		Properties: props,
 		texIds:     texIds,
 		callback:   callback,
-	}, nil
+	}
+	b.SetPosition(props.transform.X-float64(props.width)/2, props.transform.Y-float64(props.height)/2)
+
+	return b, nil
 }
 
 func (b *Button) GetTransform() *phy.Transform {
 	return b.transform
+}
+
+func (b *Button) SetPosition(x, y float64) {
+	b.transform.X = x
+	b.transform.Y = y
 }
 
 func (b *Button) IsPointInMouse(mousePos *phy.Point) bool {

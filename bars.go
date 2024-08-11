@@ -1,8 +1,6 @@
 package main
 
-import (
-	"go-game/phy"
-)
+import "go-game/phy"
 
 const BAR_OFFSET = 0
 

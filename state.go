@@ -28,7 +28,7 @@ func PlayStateInit() (*PlayState, error) {
 	p.bg = LevelManagerInsatance.GetInstance().GetBgColor()
 
 	props := Properties{
-		transform: &phy.Transform{X: 10, Y: 20},
+		transform: &phy.Transform{X: 70, Y: 82},
 		width:     128,
 		height:    128,
 		texId:     "",
@@ -103,16 +103,16 @@ func MenuStateInit() (*MenuState, error) {
 	m.staticObjs = make([]Object, 0)
 
 	playBtn, err := NewButton(&Properties{
-		transform: &phy.Transform{X: 10, Y: 20},
-		width:     128,
-		height:    128,
+		transform: &phy.Transform{X: WIDTH/2 + 50, Y: HEIGHT/2 + 100},
+		width:     256,
+		height:    256,
 		flip:      sdl.FLIP_NONE,
 	}, []string{"play_def_btn", "play_hov_btn", "play_act_btn"}, m.StartGame)
 	if err != nil {
 		return nil, err
 	}
 
-	welcomeText, err := NewText(32, "assets/fonts/test.ttf", sdl.Color{R: 255, G: 255, B: 255, A: 255}, "Welcome to the game!", WIDTH/2-50, HEIGHT/2-100, 400, 100)
+	welcomeText, err := NewText(32, "assets/fonts/Array-Regular.ttf", sdl.Color{R: 255, G: 255, B: 255, A: 255}, "Welcome to the game!", WIDTH/2-150, HEIGHT/2-150, 600, 200)
 	if err != nil {
 		return nil, err
 	}
@@ -183,16 +183,16 @@ func SuccessStateInit() (*SuccessState, error) {
 	s := &SuccessState{}
 
 	homeBtn, err := NewButton(&Properties{
-		transform: &phy.Transform{X: 40, Y: 20},
-		width:     128,
-		height:    128,
+		transform: &phy.Transform{X: WIDTH/2 + 70, Y: HEIGHT/2 + 70},
+		width:     256,
+		height:    256,
 		flip:      sdl.FLIP_NONE,
 	}, []string{"default_btn", "hover_btn", "active_btn"}, s.GoHome)
 	if err != nil {
 		return nil, err
 	}
 
-	completedText, err := NewText(32, "assets/fonts/test.ttf", sdl.Color{R: 0, B: 0, G: 0, A: 255}, "Level Completed", WIDTH/2-50, HEIGHT/2-100, 400, 100)
+	completedText, err := NewText(32, "assets/fonts/Array-Regular.ttf", sdl.Color{R: 0, B: 0, G: 0, A: 255}, "Level Completed!", WIDTH/2-70, HEIGHT/2-100, 400, 100)
 	if err != nil {
 		return nil, err
 	}
@@ -248,16 +248,16 @@ func FailureStateInit() (*FailureState, error) {
 	f := &FailureState{}
 
 	homeBtn, err := NewButton(&Properties{
-		transform: &phy.Transform{X: 40, Y: 20},
-		width:     128,
-		height:    128,
+		transform: &phy.Transform{X: WIDTH/2 + 50, Y: HEIGHT/2 + 50},
+		width:     200,
+		height:    200,
 		flip:      sdl.FLIP_NONE,
 	}, []string{"default_btn", "hover_btn", "active_btn"}, f.GoHome)
 	if err != nil {
 		return nil, err
 	}
 
-	failureText, err := NewText(32, "assets/fonts/test.ttf", sdl.Color{R: 255, G: 255, B: 255, A: 255}, "Level Failed", WIDTH/2-100, HEIGHT/2-100, 400, 100)
+	failureText, err := NewText(32, "assets/fonts/Array-Regular.ttf", sdl.Color{R: 255, G: 255, B: 255, A: 255}, "Level Failed!", WIDTH/2-100, HEIGHT/2-100, 400, 100)
 	if err != nil {
 		return nil, err
 	}
