@@ -15,7 +15,7 @@ This is a 2D platformer game built using the `go` programming language and the S
 
 ### Windows
 
-You can download the game from the [releases](link) page.
+You can download the game from the [builds](/builds/build_v1.zip) directory.
 
 ## Build Setup
 
@@ -33,4 +33,4 @@ To run the game, follow these steps:
 
 ## License
 
-This project is licensed under the [MIT License](link).
+This project is licensed under the [MIT License](LICENSE).
