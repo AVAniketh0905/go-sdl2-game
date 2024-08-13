@@ -152,7 +152,7 @@ func (p *Player) CrouchControls(dt uint64) {
 }
 
 func (p *Player) AttackControls(dt uint64) {
-	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_SPACE) {
+	if InputInstance.GetInstance().IsKeyDown(sdl.SCANCODE_X) {
 		p.rb.UnsetForces()
 		p.state = ATTACK
 	}

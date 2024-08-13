@@ -44,7 +44,7 @@ func (i *Input) GetAxisKey(axis Axis) int {
 		if i.IsKeyDown(sdl.SCANCODE_S) || i.IsKeyDown(sdl.SCANCODE_DOWN) {
 			return -1
 		}
-		if i.IsKeyDown(sdl.SCANCODE_W) || i.IsKeyDown(sdl.SCANCODE_UP) {
+		if i.IsKeyDown(sdl.SCANCODE_W) || i.IsKeyDown(sdl.SCANCODE_UP) || i.IsKeyDown(sdl.SCANCODE_SPACE) {
 			return 1
 		}
 	}

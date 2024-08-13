@@ -43,10 +43,10 @@ func (lm *LevelManager) Init() error {
 		return fmt.Errorf("failed to load map, %v", err)
 	}
 	lm.levelMap = MapParserInstance.GetInstance().GetGameMap("level1")
-	lm.gameObjects, err = ObjectParserInstance.GetInstance().Load("assets/objects.xml")
-	if err != nil {
-		return fmt.Errorf("failed to load game objects, %x", err)
-	}
+	// lm.gameObjects, err = ObjectParserInstance.GetInstance().Load("assets/objects.xml")
+	// if err != nil {
+	// 	return fmt.Errorf("failed to load game objects, %x", err)
+	// }
 	lvlLayers := lm.levelMap.GetLayers()
 
 	lm.state = PLAY
@@ -76,10 +76,10 @@ func (lm *LevelManager) Init() error {
 		return err
 	}
 
-	enemyObjs, err := ObjectParserInstance.GetInstance().Load("assets/objects.xml")
-	if err != nil {
-		return err
-	}
+	// enemyObjs, err := ObjectParserInstance.GetInstance().Load("assets/objects.xml")
+	// if err != nil {
+	// 	return err
+	// }
 
 	healthBar, err := NewBars(&Properties{
 		transform: &phy.Transform{X: 80, Y: 20},
@@ -95,7 +95,7 @@ func (lm *LevelManager) Init() error {
 
 	lm.gameObjects = append(lm.gameObjects, player)
 	lm.gameObjects = append(lm.gameObjects, healthBar)
-	lm.gameObjects = append(lm.gameObjects, enemyObjs...)
+	// lm.gameObjects = append(lm.gameObjects, enemyObjs...)
 
 	CameraInstance.GetInstance().SetTarget(player.GetOrigin())
 	CameraInstance.GetInstance().SetLevelLimit(int32(width), int32(height))
